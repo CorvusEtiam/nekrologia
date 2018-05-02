@@ -7,5 +7,6 @@ bp = Blueprint('panel', __name__)
 @bp.route('/panel')
 @login_required
 def panel():
-    return render_template("panel/panel.html")
+    users = get_db().execute("SELECT * FROM user").fetchall()
+    return render_template("panel/panel.html", users = users)
 

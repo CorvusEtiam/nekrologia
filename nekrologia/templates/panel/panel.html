@@ -11,7 +11,15 @@
 <body>
     <main class='container'>
         <aside class='sidebar'>
-            <section class='sidebar__item' id='administrationOpenner' data-target='administrationPanel'>Administacja</section>
+            <section class="sidebar__group">
+                <section class='sidebar__group--header activity__toggle' id='openAdminGroupToggle' data-target='adminSidebarGroup'>
+                    <span class='sidebar__group--name'>Administacja</span>
+                    <span class='icon__expand'>&#x2228;</span>
+                </section>
+                <section class='sidebar__group--content' id='adminSidebarGroup'>
+                    <section class='sidebar__item' id='metadataOpenner' data-target='adminUserPanel'>Użytkownicy</section>
+                </section>
+            </section>
             <section class="sidebar__group">
                 <section class='sidebar__group--header activity__toggle' id='openGroupToggle' data-target='sidebarGroup'>
                     <span class='sidebar__group--name'>Dodaj grób</span>
@@ -25,7 +33,34 @@
             <section class='sidebar__item' id='cementaryOpenner' data-target='cementaryPanel'>Dodaj cmentarz</section>
         </aside>    
         <section class='panel__container'>
-            <section class='panel__item' id='administrationPanel'></section>
+            <section class='panel__item' id='adminUserPanel'>
+                <section class='panel__inside'>
+                <table class='users__table'> 
+                    <thead>
+                        <tr>
+                            <th>Nazwa użytkownika</th>
+                            <th>Email</th>
+                            <th>Admin</th>
+                            <th>Aktywne</th>
+                            <th>Usuń</th>
+                            <th>Edytuj</tr>                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{user['username']}}</td>
+                            <td>{{user['email']}}</td>
+                            <td>{% if user['admin_permit'] == 1 %}<span class='yes'>Y</span>{% else %}<span class='no'>N</span>{% endif %}</td>
+                            <td>{% if user['activated'] == 1 %}<span class='yes'>Y</span>{% else %}<span class='no'>N</span>{% endif %}</td>
+                            <td><button class='remove-button' data-target="{{user['id']}}">Usuń</button></td>
+                            <td><button class='edit-button' data-target="{{user['id']}}">Edytuj</button></td>                            
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+            </section>
             <section class='panel__item' id='metadataPanel'>
                 <form class='panel__form'>
                     <fieldset class='panel__block'>
@@ -85,7 +120,6 @@
             </section>
         </section>
     </main>
-
     <!-- left sidebar --> 
     <!-- content -->
     <!-- -->

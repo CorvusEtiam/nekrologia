@@ -2,9 +2,8 @@ import os
 from flask import Flask, send_from_directory, jsonify    
 import logging 
 import sys 
-from . import db 
-from nekrologia.blueprints import auth
-from nekrologia.blueprints import panel 
+from nekrologia import db 
+from nekrologia.blueprints import auth, panel, api 
 
 def setup_logging():
     logger = logging.getLogger('nekrologia')
@@ -37,18 +36,16 @@ def create_app(test_config=None):
     db.init_app(app)
     logger.info('Datebase initialized')
     logger.info('PYTHON VERSION: ' + sys.version)
+    
+    init_cache()
+
     app.register_blueprint(auth.bp)
     app.register_blueprint(panel.bp)
-
-    @app.route('/hello')
-    def test_route():
-        return "<h1>Hello World!</h1>"
-
-
+    app.register_blueprint(api.bp)
+    
     @app.route('/')
     def root():
         return render_template("index.html")
-
 
     @app.route('/src/<path:path>')
     def send_js(path):

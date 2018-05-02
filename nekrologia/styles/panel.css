@@ -11,65 +11,96 @@
     display: flex;
     flex-direction: row;
 }
+
+/*********************************************************************/
+
 .sidebar {
     width: 16.67%;
     background: rgb(0, 180, 0);
     flex-direction: column;
 }
-.content {
-    flex: 1;
-}
 
-.sidebar__group {
-    display: flex;
-    flex-direction: column;
-}
+    .sidebar__group {
+        display: flex;
+        flex-direction: column;
+    }
 
-.sidebar__group--header, .sidebar__item {
-    position: relative;
-    padding-left: 1em;
-    font-size: 14pt;
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-    cursor: pointer;
-}
+    .sidebar__group--header, .sidebar__item {
+        position: relative;
+        padding-left: 1em;
+        font-size: 14pt;
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+        cursor: pointer;
+    }
 
-.sidebar__group--header {
-    background-color: rgb(0, 150, 0);
-    color: white;
-    font-weight: bold;
-}
+    .sidebar__group--header {
+        background-color: rgb(0, 150, 0);
+        color: white;
+        font-weight: bold;
+    }
 
-.sidebar__group--name {
-    padding-right: 4em;
-}
+    .sidebar__group--name {
+        padding-right: 4em;
+    }
 
+    .sidebar__item:hover {
+        background-color: rgb(0, 230, 0);
+    }
+    
+    .sidebar__item.active {
+        background: rgb(0, 230, 0);
+    }
+    
+    .sidebar__group--content > .sidebar__item {
+        position: relative;
+        padding-left: 2.5em;
+    }
+    
+    .content {
+        flex: 1;
+    }
 
+/*********************************************************************/
+
+    
 .icon__expand {
     font-size: 10pt;
 }
 
-.sidebar__item:hover {
-    background-color: rgb(0, 230, 0);
-}
-
-.sidebar__group--content > .sidebar__item {
-    position: relative;
-    padding-left: 2.5em;
-}
-
-.sidebar__item.active {
-    background: rgb(0, 230, 0);
-}
+/*********************************************************************/
 
 .panel__item {
     display: none;
 }
-
-.panel__item.active {
-    display: block;
+    
+    .panel__item.active {
+        display: block;
+    }
+    
+.hidden {
+    display: none;
+}   
+    
+.users__table {
+    border-collapse: collapse;
 }
 
+.users__table th {
+    background: rgb(0, 150, 0);
+    color: white;
+    text-align: center;
+    border: 1px solid #222;
+    padding: 0.5rem;
+}
 
+.users__table td {
+    border: 1px solid #222;
+    padding: 0.5rem;
+    text-align: left;
+}
 
+.panel__inside {
+    padding: 15pt;
+}
 

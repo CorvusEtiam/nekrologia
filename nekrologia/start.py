@@ -1,9 +1,9 @@
 from flask import request, render_template, redirect, url_for, Flask  
 from flask.ext.login import LoginManager, login_user, login_required, logout_user, UserMixin, current_user 
 from flask_sqlalchemy import SQLAlchemy 
+
 from werkzeug.security import generate_password_hash, check_password_hash 
 from wtforms import Form, TextField, PasswordField, validators
-from mistune import Renderer, InlineGrammar, InlineLexer 
 from copy import deepcopy 
 from functools import wraps 
 
@@ -164,46 +164,3 @@ def editor():
     return render_template("editor.html")
 
 ################################################################################
-
-@current_app.route('/api/internal', methods = ['POST', 'GET'])
-@login_required
-def api_internal():
-    action = request.values.get('action') 
-    param  = request.values.get('param')
-    grave_attr = ['name', 'surname', 'fullname', 'date_of_birth', 'date_of_death', 'gps_lon', 'gps_lat']
-    if action == 'create' and param == 'grave':
-        data = { key : request.values.get(key) for key in grave_atrr } 
-        grave = Grave(**data)
-        db.session.add(grave)
-        app.logger.debug("Nowy grób został dodany : " + data['fullname'])
-        db.session.commit()
-        CACHE['graves'].update()
-    elif action == 'update' and param == 'grave':
-        CACHE['*graves'].update()
-    elif action == 'preview':
-        # jsonify({ 'html' : render(some_markdown) })
-        pass 
-    elif action == 'create' and param == 'user' and current_user.permit_admin == True:
-        CACHE['users'].update()
-        pass 
-    elif action == 'delete' and param == 'user' and current_user.permit_admin == True:
-        CACHE['users'].update()
-        pass 
-     
-
-@current_app.route('/api/external', methods = ['POST', 'GET'])
-def api_external():
-    action = request.values.get('action')
-    param = request.values.get('param')     
-    if action == 'list':
-        if param == 'graves':
-            return CACHE['graves'].json()
-        else param == 'cementaries':
-            return CACHE['cementaries'].json()
-        else param == 'users' and current_user.permit_admin == True:
-            return CACHE['users'].json()
-    elif action == 'select':
-        pass  
-    elif action == 'description'
-        pass 
-

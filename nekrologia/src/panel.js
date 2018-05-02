@@ -1,16 +1,10 @@
-
 function init_sidebar() {
-    window.PANELS = {}
     document.querySelectorAll('.activity__toggle').forEach(function(el) {
         el.addEventListener('click', function(ev) {
             var target_id = el.getAttribute('data-target');
             console.log("=> %s", target_id);
             var target = document.getElementById(target_id);
-            if ( target.classList.contains('hidden') ) {
-                target.classList.remove('hidden');
-            } else {
-                target.classList.add('hidden');
-            }
+            target.classList.toggle('hidden');
         });
     });
 
@@ -31,6 +25,59 @@ function init_sidebar() {
             el.classList.add('active')
         });        
     })
+}
+
+var MODALS = (function() {
+    function init_modal() {
+        
+    }
+
+    var o = {};
+    o.remove_user = function(user_id) {
+        $.getJSON('api/internal', { action: 'show', param : 'user', id: user_id}, function(ev) {
+            var html = `
+                <p>
+                    Login: <span id='modalRemUser_Username'></span>
+                    Email: <span id='modalRemUser_Email'></span>
+                </p>
+                <div>
+                    <button id='modalRemUser_BtnAnuluj' class='btn__info'>Anuluj</button>
+                    <button id='modalRemUser_BtnDelete' class='btn__warn'>Usuń</button>
+                </div>`
+            
+            $('#modalHeader').text("Usuń użytkownika");
+            $('#modalContent').html(html);
+            $('#modalRemUser_BtnAnuluj').on('click', function(ev) {
+                $('#modal').toggle();
+            })
+            $('#modalRemUser_BtnDelete').on('click', function(ev) {
+                $.post('api/internal', {
+                    action : "delete",
+                    param: "users",
+                    id: user_id 
+                }).done(function(data) {
+                    console.log(data);
+                })
+            })
+        });
+    }
+})
+
+function init_user_manager() {
+    document.querySelectorAll('button.remove-button').forEach(function(el) {
+        var id = el.getAttribute('data-target');
+        el.addEventListener('click', function(ev) {
+            MODALS.remove_user(id);
+        })
+    });
+    
+    document.querySelectorAll('button.edit-button').forEach(function(el) {
+        var id = el.getAttribute('data-target');
+        el.addEventListener('click', function(ev) {
+            MODALS.edit_user(id);
+        })
+    });
+    
 }
 
 window.onload = function() {
