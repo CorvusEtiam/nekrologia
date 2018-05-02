@@ -1,0 +1,21 @@
+{% extends "auth/base.html" %}
+{% block title %}Zaloguj się{% endblock %}
+{% block content %} 
+<form class="login" method="POST" role="form">
+    {{ form.csrf_token }}
+    {% if error != None %}
+    <p class='form__group--error'>
+        <h2>{{ error }}</h2>
+        {% for error in form.username.errors %}
+        <span class='error'>{{ error }}</span>
+        {% endfor %}
+        {% for error in form.password.errors %}
+        <span class='error'>{{ error }}</span>
+        {% endfor %}
+    </p>    
+    {% endif %}
+    {{ form.username(class='login__input') }}
+    {{ form.password(class='login__input') }}
+    <button class='login__submit' type="submit">Zaloguj</button>
+</form>
+{% endblock %}

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="styles/panel.css">
+    <title>Panel sterowania</title>
+</head>
+<body>
+    <main class="container">
+        <!--
+        <aside class='sidebar'>
+            <ul class='sidebar__content'>
+                <section class="sidebar__block--item" id='account' data-target='accountManagePanel'>Konto</section>
+                {% if g.is_admin == True %}
+                <section class="sidebar__group" id='admin'>
+                <section class="sidebar__group--header">Administracja</section>
+                <section class="sidebar__group--content">
+                    <section class="sidebar__block--item" id='manageAccount' data-target='manageAccountPanel'>Zarządzaj kontami</section>
+                    <section class="sidebar__block--item" id='acceptAccount' data-target='acceptAccountPanel'>Akceptuj konto</section>
+                </section>
+            </section>
+            {% endif %}
+            <section class="sidebar__block--item" id='metadate' data-target='metadataPanel'>Metadane</section>
+            <section class="sidebar__block--item" id='editor' data-target='editorPanel'>Edytor opisu</section>
+            <section class="sidebar__block--item" id='cementary' data-target='cementaryCreatorPanel'>Dodaj cmentarze</section>
+            </ul>
+        </aside> aside#sidebar -->
+        <aside class='sidebar'>
+            <ul class='sidebar__block'>
+                <li>
+                    <a href='#' data-target='manageAccountPanel' id='manageAccount'>Zarządzaj kontami</a>
+                </li>
+                <li id='graveCreatorSubmenu'>
+                    <a href='#' data-target='userEditorPanel' class='sidebar__submenu--header'>
+                        Edytor grobów
+                    </a>
+                    <ul>
+                        <li>
+                            <a href='#' data-target='metadataPanel'>Metadane</a>
+                        </li>
+                        <li>
+                            <a href="#" data-target='editorPanel'>Edytor</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-target="cementaryCreatorPanel">Nowy cmentarz</a>
+                </li>
+            </ul>
+        </aside>
+        <section class='panel__container'>
+            <section class='panel__wrap' id='manageAccountPanel'></section>
+            <section class='panel__wrap' id='metadataPanel'>
+                <form class='panel__form'>
+                    <fieldset class='panel__block'>
+                        <legend>Imię i nazwisko:</legend>
+                        <input type="text" name="first_name" id='meta-first-name' />
+                        <input type="text" name="second_name" id='meta-second-name' />
+                    </fieldset>
+                    <fieldset  class='panel__block'>
+                        <legend>Data i miejsce urodzenia:</legend>
+                        <input type="text" name="birth" id='meta-birth' />
+                        <input type="text" name="birth-city" id='meta-birth-city' />
+                    </fieldset>
+                    <fieldset  class='panel__block'>
+                        <legend>Data i miejsce śmierci:</legend>
+                        <input type="text" name="death" id='meta-death' />
+                        <input type="text" name="death-city" id='meta-birth-city' />
+                    </fieldset>
+                    <fieldset class='panel__block'>
+                        <label for="age">Wiek:</label>
+                        <input type="text" name="age" id='meta-age' />
+                    </fieldset>
+                    <fieldset class='panel__block'>
+                        <legend>GPS:</legend>
+                        <input type="text" name="gps-w" id='meta-gps-width' />
+                        <input type="text" name="gps-h" id='meta-gps-height' />
+                    </fieldset>
+                    <div class='panel__block'>
+                        <label for="university">Uniwersytet</label>
+                        <select name='university'></select>
+                    </div>
+                    <div class='panel__block'>
+                        <label for="graveyard">Cmentarz</label>
+                        <select name='graveyard'></select>
+                        <button id='add-graveyard' class='panel__button--add'>Dodaj cmentarz</button>
+                    </div>
+                    <div class='panel__block'>
+                        <button class='panel__button--save'>Zapisz</button>
+                        <button class='panel__button--warn'>Anuluj</button>
+                    </div>
+                </form>
+            </section> <!-- section#metadataPanel -->
+            <section class="panel__wrap" id="editorPanel">
+                <section class='editor' id="editor">
+                    <section class='editor__input' id='editorInput'>
+                        
+                    </section>
+                    <section class='editor__preview' id='editorPreview'>
+
+                    </section>
+                </section>
+                <section class='editor__bar'>
+                    <button id='editorLoadPreview' class='panel__button--info'>Podgląd</button>    
+                </section>
+            </section> <!-- section#editorPanel -->
+        </section>
+    </main>
+
+    <!-- left sidebar --> 
+    <!-- content -->
+    <!-- -->
+    <script src="src/external/jquery-3.2.1.js"></script>
+    <script src="src/model.js"></script>
+    <script src="src/panel.js"></script>
+</body>
+</html>

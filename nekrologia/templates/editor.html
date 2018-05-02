@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href='../css/editor.css' type="text/css" rel="stylesheet">
+    <title>Zarządzaj stroną</title>
+</head>
+<body>
+    <main>
+        <aside>
+            <div class='tab-bar__wrapper' id='tabs'>
+                <section class='tab-item' data-target='dashboard'><p>Pulpit</p></section>
+                {% if current_user.permit_admin == True %} 
+                <section class='tab-item' data-target="users"><p>Loginy</p></section>
+                {% endif %}
+                <section class='tab-item' data-target="photo"><p>Zdjęcia</p></section>
+                <section class='tab-item' data-target="metadata"><p>Metadane</p></section>
+                <section class='tab-item' data-target="text-editor"><p>Opis</p></section>
+                <section class='tab-item' data-target="cementaries"><p>Cmentarze</p></section>
+            </div>
+        </aside>
+        <header id='current-mode' class="center-content">Tryb</header>
+        <div class='content-wrapper'>
+            <article class='content' id='tabs-content'>
+            <div class='tab-content__wrap active' id='dashboard'>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Lp.</th>
+                            <th>Imię i nazwisko</th>
+                            <th>Edytuj</th>
+                            <th>Usuń</th>    
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div class='bar'>
+                    <button class='right simple'>Dodaj</button>
+                </div>
+            </div>
+            {% if current_user.permit_admin == True %}
+            <div class='tab-content__wrap active' id='users'>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Lp.</th>
+                            <th>Imię i nazwisko</th>
+                            <th>Edytuj</th>
+                            <th>Usuń</th>    
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div class='bar'>
+                    <button class='right simple'>Dodaj</button>
+                </div>
+            </div>
+            {% endif %}
+            <div class='tab-content__wrap' id='photo'>
+                <button class='right simple'>Dodaj zdjęcie</button>
+                <div>
+                    <div id="edit_meta"></div>
+                    <div id="preview"></div>
+                </div>
+                <div class="bar">
+                    <button class='right simple'>Zapisz</button>
+                    <button class='right warn'>Anuluj</button>    
+                </div>
+            </div>
+            <div class='tab-content__wrap' id='metadata'>
+                <form>
+                    <fieldset>
+                        <legend>Imię i nazwisko:</legend>
+                        <input type="text" name="first_name" id='meta-first-name'/>
+                        <input type="text" name="second_name" id='meta-second-name'/>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Data i miejsce urodzenia:</legend>    
+                        <input type="text" name="birth" id='meta-birth'/>
+                        <input type="text" name="birth-city" id='meta-birth-city'/>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Data i miejsce śmierci:</legend>        
+                        <input type="text" name="death" id='meta-death'/>
+                        <input type="text" name="death-city" id='meta-birth-city'/>
+                    </fieldset>
+                    <label for="age">Wiek:</label>
+                    <input type="text" name="age" id='meta-age'/>
+                    <fieldset>
+                        <legend>GPS:</legend>        
+                        <input type="text" name="gps-w" id='meta-gps-width'/>
+                        <input type="text" name="gps-h" id='meta-gps-height'/>
+                    </fieldset>
+                    <label for="university">Uniwersytet</label>
+                    <select name='university'></select>
+                    <label for="university">Cmentarz</label>
+                    <select name='graveyard'></select>
+                    <button id='add-graveyard'>Dodaj cmentarz</button>
+                </form>
+                <div class='bar'>
+                    <button class='right simple'>Zapisz</button>
+                    <button class='right warn'>Anuluj</button> 
+                </div>
+            </div>
+            <div class='tab-content__wrap' id='text-editor'>
+                <div id='editor' contenteditable="true">
+
+                </div>
+                <div id='preview'></div>
+            </div>
+            <div class='tab-content__wrap' id='cementaries'>
+            </div>
+            </article>
+        </div>
+    </main>
+    <script src="../js/tabbed.js"></script>
+<!--    <script src="editor.js"></script> -->
+    <!-- marked library for preview -->
+</body>
+</html>

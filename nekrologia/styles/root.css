@@ -1,0 +1,269 @@
+* {
+    box-sizing: border-box;
+}
+html, body, #container {
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+}
+
+#map {
+    width: auto;
+    height: 100%;
+}
+
+#left-sidebar {
+    background-color: green;
+    float: left;
+    height: 100%;
+    max-height: 100%;
+    width: 200px;
+    overflow-y: auto;
+    overflow-x: none;
+}
+
+@media screen and (max-width: 400px) {
+    body {
+        padding-top: 50px;  
+    }
+
+    .horizont {
+        display: relative;
+    }
+
+    .horizont > li {
+        display: inline-block;
+    }
+}
+
+
+#my-nav {
+    display: none;
+}
+
+body {
+    padding-top: 0px;
+}
+@media screen and (max-width:425px) and (orientation: portrait) /*desktop and tablet*/ {
+    #my-nav {
+        display: block;
+    }
+    body {
+        padding-top: 50px;
+    }
+    
+    .navbar-nav>li, .navbar-nav {
+        float: left !important;
+    }
+
+}
+
+@media screen and (max-height:425px) and (orientation: landscape) /*desktop and tablet*/ {
+    #my-nav {
+        display: block;
+    }
+    body {
+        padding-top: 50px;
+    }
+    
+    .navbar-nav>li, .navbar-nav {
+        float: left !important;
+    }
+     
+}
+
+
+#person-list__wrapper {
+    list-style-type: none;
+    width: 100%;
+    padding: 10px;
+    background-color: forestgreen;
+    font-size: 12pt;
+    font-family: "Times New Roman";
+    justify-content: center;
+    text-align: center;
+}
+
+.person-wrapper > div.name {
+    font-size: 14pt;
+    font-weight: bold;   
+}
+
+.person-menu {
+    display: flex;
+    flex-direction: row;
+    display: none;
+}
+
+.person-menu.active {
+    display: block;
+}
+
+
+.person-menu > button {
+    width: 50%;
+}
+
+@media screen and (min-width: 1000px) {
+    /* desktop */
+    .person-list__item > .person-menu {
+        display: none;
+    }
+}
+
+#left-sidebar__top-menu {
+    display: none;
+}    
+
+@media screen and (max-width: 400px) {
+    /* mobile */
+    #left-sidebar {
+        width: 100%;
+        z-index: 100;
+    }   
+
+    #left-sidebar__top-menu {
+        display: flex;
+        flex-direction: row;   
+    }
+
+    #left-sidebar__top-menu > .item {
+        width: 50%;   
+    }
+}
+
+.person-list__item {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+#popup-dates > span {
+    font-size: 10pt;
+    font-weight: bold;
+}
+#popup-fullname {
+    font-size: 12pt;
+}
+
+.person-list__item:hover {
+    background-color: green;
+    cursor: pointer; 
+}
+
+#sidebar {
+    font-size: 12pt;
+    line-height: 1.25em;
+    padding: 0 0 1rem 0;
+    margin-right: 10px;
+    margin-left: 10px;
+    font-family: 'EB Garamond', serif;    
+    text-align: justify;
+
+}
+
+#right-navbar ul {
+    list-style-type: none;
+    text-align: center;
+}
+
+#right-navbar a {
+    text-decoration: none;
+}
+
+
+.portrait {
+    float: right;
+    padding: 10px;
+}
+
+
+
+#right {
+    z-index: 1;
+    float: right;
+    background-color: #459C33;
+    width: 600px;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 12pt; 
+}
+
+#person-descr {
+    padding: 5px;
+}
+
+#person-descr p {
+    margin-bottom: 0;
+    text-indent: 1.5em;
+}
+#person-descr img {
+    float: right;
+    width: 150px;
+    height: 250px;
+    padding: 0.5em;
+}
+
+
+#person-descr p+p {
+    text-indent: 1.5em;
+    margin-top: 0;
+}
+
+
+
+#name {
+    font-size: 16pt;
+    font-family: "EB Garmond", serif;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
+    display: block;
+
+}
+
+
+.hidden {
+    display: none;
+}
+@media screen and (max-width:400px) {
+    #right-sidebar {
+        top: 7px;
+    }
+
+}
+
+.person-list__item.active {
+    background-color: green;
+}
+
+
+
+    
+div#show-info__container {
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+  
+@media screen and (max-width:400px) {
+    div#show-info__container {
+        display: none;
+    }        
+}
+
+div#show-info__container button {
+    padding: 15px;
+    background-color: green;    
+    color: white;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+  
+#show-info__container button:hover {
+    background-color: darkgreen;
+}
+
+ 

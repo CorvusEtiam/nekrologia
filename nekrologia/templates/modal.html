@@ -1,0 +1,22 @@
+<div class='modal-dialog' role='document'>
+	<div class='modal-content'>
+			<section class='modal-header'>
+	<ul class="nav nav-tabs">
+			<li class="active"><a href="#o_stronie" data-toggle="tab">O stronie</a></li>
+			<li><a href="#o_autorach" data-toggle="tab">O autorach</a></li>
+	</ul>
+			<section class="modal-body">
+				<div class='tab-content'>
+					<div id="o_stronie" class="tab-pane fade in active">
+							{% include "about_page.html" %}
+					</div>
+					<div id="o_autorach" class="tab-pane fade active">
+							{% include "about_author.html" %}
+					</div>
+			</div>			
+			</section>
+		<section class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+		</section>
+	</div> <!-- .model-content -->
+</div> <!-- .model-dialog -->

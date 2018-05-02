@@ -1,0 +1,40 @@
+{% extends "auth/base.html" %}
+{% block title %}Rejestracja{% endblock %}
+{% block content %}
+<form method='POST' role='form' class='login__submit'>
+    {{ form.csrf_token }}
+    {% if error != None %}
+    <h2>{{error}}</h2>
+    {% endif %}
+    {% if form.errors %}
+    <p class='form__group--error'>
+        {% for error in form.username.errors %}
+        <span class='error'>{{ error }}</span>
+        {% endfor %}
+        {% for error in form.email.errors %}
+        <span class='error'>{{ error }}</span>
+        {% endfor %}
+        {% for error in form.password.errors %}
+        <span class='error'>{{ error }}</span>
+        {% endfor %}
+    </p>    
+    {% endif %}
+    <div class="login__group">  
+        {{ form.username.label(class='login__label') }}
+        {{ form.username(class='login__input') }}
+    </div>
+    <div class="login__group"> 
+        {{ form.email.label(class='login__label') }}
+        {{ form.email(class='login__input') }}
+    </div> 
+    <div class="login__group"> 
+        {{ form.password.label(class='login__label') }}    
+        {{ form.password(class='login__input') }}
+    <div class="login__group"> 
+    {{ form.confirm.label(class='login__label') }}    
+    {{ form.confirm(class='login__input') }}
+    <div class="login__group">
+        <button class='login__submit' type="submit">Zarejestruj</button>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "auth/base.html" %}
+{% block title %}Rejestracja{% endblock %}
+{% block content %}
+<p>
+    Przepraszamy, konto nie istnieje lub nie zostało jeszcze aktywowane. Otrzymają państwo maila z potwierdzeniem rejestracji, gdy konto zostanie uaktywnione
+</p>
+<p>
+    <a href="{{ url_for('auth.login') }}">Logowanie</a>
+</p>
+{% endblock %}
