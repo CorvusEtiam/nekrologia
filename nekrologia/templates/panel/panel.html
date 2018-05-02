@@ -5,55 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" type="text/css" href="styles/panel.css">
+    <link rel="stylesheet" href="styles/panel.css" type="text/css"/>
     <title>Panel sterowania</title>
 </head>
 <body>
-    <main class="container">
-        <!--
+    <main class='container'>
         <aside class='sidebar'>
-            <ul class='sidebar__content'>
-                <section class="sidebar__block--item" id='account' data-target='accountManagePanel'>Konto</section>
-                {% if g.is_admin == True %}
-                <section class="sidebar__group" id='admin'>
-                <section class="sidebar__group--header">Administracja</section>
-                <section class="sidebar__group--content">
-                    <section class="sidebar__block--item" id='manageAccount' data-target='manageAccountPanel'>Zarządzaj kontami</section>
-                    <section class="sidebar__block--item" id='acceptAccount' data-target='acceptAccountPanel'>Akceptuj konto</section>
+            <section class='sidebar__item' id='administrationOpenner' data-target='administrationPanel'>Administacja</section>
+            <section class="sidebar__group">
+                <section class='sidebar__group--header activity__toggle' id='openGroupToggle' data-target='sidebarGroup'>
+                    <span class='sidebar__group--name'>Dodaj grób</span>
+                    <span class='icon__expand'>&#x2228;</span>
+                </section>
+                <section class='sidebar__group--content' id='sidebarGroup'>
+                    <section class='sidebar__item' id='metadataOpenner' data-target='metadataPanel'>Metadane</section>
+                    <section class='sidebar__item' id='editorOpenner' data-target='editorPanel'>Edytor</section>
                 </section>
             </section>
-            {% endif %}
-            <section class="sidebar__block--item" id='metadate' data-target='metadataPanel'>Metadane</section>
-            <section class="sidebar__block--item" id='editor' data-target='editorPanel'>Edytor opisu</section>
-            <section class="sidebar__block--item" id='cementary' data-target='cementaryCreatorPanel'>Dodaj cmentarze</section>
-            </ul>
-        </aside> aside#sidebar -->
-        <aside class='sidebar'>
-            <ul class='sidebar__block'>
-                <li>
-                    <a href='#' data-target='manageAccountPanel' id='manageAccount'>Zarządzaj kontami</a>
-                </li>
-                <li id='graveCreatorSubmenu'>
-                    <a href='#' data-target='userEditorPanel' class='sidebar__submenu--header'>
-                        Edytor grobów
-                    </a>
-                    <ul>
-                        <li>
-                            <a href='#' data-target='metadataPanel'>Metadane</a>
-                        </li>
-                        <li>
-                            <a href="#" data-target='editorPanel'>Edytor</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#" data-target="cementaryCreatorPanel">Nowy cmentarz</a>
-                </li>
-            </ul>
-        </aside>
+            <section class='sidebar__item' id='cementaryOpenner' data-target='cementaryPanel'>Dodaj cmentarz</section>
+        </aside>    
         <section class='panel__container'>
-            <section class='panel__wrap' id='manageAccountPanel'></section>
-            <section class='panel__wrap' id='metadataPanel'>
+            <section class='panel__item' id='administrationPanel'></section>
+            <section class='panel__item' id='metadataPanel'>
                 <form class='panel__form'>
                     <fieldset class='panel__block'>
                         <legend>Imię i nazwisko:</legend>
@@ -94,7 +67,7 @@
                     </div>
                 </form>
             </section> <!-- section#metadataPanel -->
-            <section class="panel__wrap" id="editorPanel">
+            <section class="panel__item" id="editorPanel">
                 <section class='editor' id="editor">
                     <section class='editor__input' id='editorInput'>
                         
@@ -107,14 +80,16 @@
                     <button id='editorLoadPreview' class='panel__button--info'>Podgląd</button>    
                 </section>
             </section> <!-- section#editorPanel -->
+            <section class='panel__item' id='cementaryPanel'>
+
+            </section>
         </section>
     </main>
 
     <!-- left sidebar --> 
     <!-- content -->
     <!-- -->
-    <script src="src/external/jquery-3.2.1.js"></script>
-    <script src="src/model.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="src/panel.js"></script>
 </body>
 </html>
