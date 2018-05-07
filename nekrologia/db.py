@@ -5,7 +5,7 @@ import click
 from flask import current_app, g, Flask  
 from flask.cli import with_appcontext
 
-def select(cols : str | typing.List[str], table : str, where : typing.Optional[str] = None):
+def select(cols, table, where=None):
     if type(cols) is list:
         cols_str = ', '.join(cols)
     if where is None:

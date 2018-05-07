@@ -1,5 +1,5 @@
 from .auth import login_required
-from flask import g, current_app, Blueprint, request, render_template, url_for, session, send_file 
+from flask import g, current_app, Blueprint, request, render_template, url_for, session, send_file, jsonify
 from nekrologia.db import get_db 
 from nekrologia.cache import get_cache, get_cached_resource, update_cache
 from werkzeug.security import generate_password_hash
@@ -8,10 +8,13 @@ from functools import wraps
 bp = Blueprint('api', __name__)
 
 class BaseEndpoint:
-    def connect(self, action, data = None):
-        action_name = action.lower()
-        if hasattr('do_' + action_name):
-            return getattr(self, 'do_'+action_name)(data or {})
+    def __init__(self, data):
+        self._data = data 
+        self._action = data.get('action')
+        self._name = self._action.lower()
+    def run(self):
+        if hasattr(self, 'do_' + self._name):
+            return getattr(self, 'do_'+self._name)(self._data or {})
  
 
 class InternalEndpoint(BaseEndpoint):
@@ -68,7 +71,8 @@ class InternalEndpoint(BaseEndpoint):
     def _create_user(self, data):
         sql = "INSERT INTO user (username, email, password_hash, admin_permit, activated) VALUES (?,?,?,0,0)"
         placeholders = (data['username'], data['email'], generate_password_hash(data['password']))
-        get_db().execute(sql, placeholders).commit()
+        get_db().execute(sql, placeholders)
+        get_db().commit()
         return {"status_msg" : "ok"}
 
     @update_cache('graves')
@@ -193,7 +197,7 @@ class ExternalEndpoint(BaseEndpoint):
         param = data['param']
         if param == 'grave':
             return get_cached_resource('graves').copy()
-        elif param == 'user' and 'is_admin' is g and g.is_admin == True:
+        elif param == 'user': # and 'is_admin' in g and g.is_admin == True:
             return get_cached_resource('users').copy()
         elif param == 'cementary':
             return get_cached_resource('cementaries').copy()
@@ -206,12 +210,19 @@ class ExternalEndpoint(BaseEndpoint):
         db = get_db()
         if param == 'grave':
             row = db.execute('SELECT * FROM grave WHERE id=?', (data['id'],)).fetchone()
+            if row is None:
+                return dict(status_message = "No such grave")
             return dict(row)
         elif param == 'cementary':
             row = db.execute('SELECT * FROM cementary WHERE id=?', (data['id'],)).fetchone()
+            if row is None:
+                return dict(status_message = "No such cementary")
+            
             return dict(row) 
         elif param == 'user':
             row = db.execute('SELECT * FROM user WHERE id=?', (data['id'],)).fetchone()
+            if row is None:
+                return dict(status_message = "No such user")
             return dict(row)   
 
         
@@ -220,15 +231,19 @@ def grave(user_id):
     return send_file(os.path.join(current_app.instance_path, '/res/osoba/{}.html'.format(user_id)))
 
 @bp.route('/api/internal', methods = ['POST', 'GET'])
-@login_required
+#@login_required
 def internal():
-    action = request.values.get('action') 
-    endpoint = Endpoint()
-    return jsonify(endpoint.connect(action, data = request.values))
+    if request.method == 'POST':
+        data = request.json
+        external = InternalEndpoint(data)
+        return jsonify(external.run())
+
      
 @bp.route('/api/external', methods = ['POST', 'GET'])
 def external():
-    action = request.values.get('action')
-    external = ExternalEndpoint()
-    return jsonify(external.connect(action, data = request.values))
-
+    if request.method == 'POST':
+        data = request.json 
+        external = ExternalEndpoint(data)
+        return jsonify(external.run())
+    else:
+        return jsonify({"status_message" : "idk your response"})

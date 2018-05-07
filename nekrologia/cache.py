@@ -1,7 +1,8 @@
-from flask import Flask, jsonify, current_app
+from flask import Flask, jsonify, g, current_app
 from nekrologia.db import get_db
 from functools import wraps 
-
+import typing 
+from copy import deepcopy 
 
 def update_cache(cached_val_name):
     def cache_wrapper(method):
@@ -39,7 +40,7 @@ class Cached:
         self._update = update_callback 
     
     def copy(self):
-        return deepcopy(self.data)
+        return deepcopy(self._data)
 
     def update(self):
         self._data = self._update()
@@ -59,7 +60,7 @@ def init_app(app : Flask):
 def get_cached_resource(name : str) -> Cached:
     return get_cache()[name];
 
-def get_cache() -> Dict[str, Cached]:
+def get_cache() -> typing.Dict[str, Cached]:
     if 'cache' not in g:
         g.cache = init_cache()
         for cached in g.cache.values():
