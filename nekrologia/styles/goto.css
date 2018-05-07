@@ -1,0 +1,23 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    background: forestgreen;
+}
+
+.container__content {
+    height: 85%;
+    background: #eee;
+}
+
+.panel__container {
+    display: flex;
+    flex-direction: row;
+}
+
+.panel__tile {
+    width: 180px;
+    height: 180px;
+}
+

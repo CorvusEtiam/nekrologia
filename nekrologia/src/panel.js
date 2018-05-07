@@ -1,3 +1,17 @@
+/**
+ * @todo create full text editor from Mozilla page on Rich Text Editors
+ * @todo fill-in POST method for metadata 
+ */
+function closeAll() {
+    document.querySelectorAll('.panel__item').forEach(function(el) {
+        el.classList.remove('active');
+    });
+
+    document.querySelectorAll('.sidebar__item').forEach(function(el) {
+        el.classList.remove('active');
+    });
+ }
+
 function init_sidebar() {
     document.querySelectorAll('.activity__toggle').forEach(function(el) {
         el.addEventListener('click', function(ev) {
@@ -12,15 +26,7 @@ function init_sidebar() {
         var target_id = el.getAttribute('data-target');
         console.log("--> ", target_id);
         el.addEventListener('click', function(ev) {
-            /// close all panels
-            document.querySelectorAll('.panel__item').forEach(function(el) {
-                el.classList.remove('active');
-            });
-
-            document.querySelectorAll('.sidebar__item').forEach(function(el) {
-                el.classList.remove('active');
-            });
-
+            closeAll();
             document.getElementById(target_id).classList.add('active');
             el.classList.add('active')
         });        
@@ -82,4 +88,37 @@ function init_user_manager() {
 
 window.onload = function() {
     init_sidebar();
+    document.getElementById('#metadataPanelSaveButton').addEventListener('click', function(ev) {
+        var data = {}
+        document.querySelectorAll('#metadataPanel > input').forEach(function(el) {
+            data[el.getAttribute('name')] = el.value;
+        })
+        localStorage.setItem('grave_metadata', data);
+        if (localStorage.getItem('grave_description') === undefined ) {
+            alert("Dane zostały zapisane. Proszę uzupełnić opis");
+        } else {
+            var choice = confirm("Czy uzupełniłeś również opis i chcesz przesłać dane?");
+            if (choice) {
+                data['description'] = localStorage.getItem('grave_description');
+                $.post('api/internal', {
+                    data: JSON.stringify(data),
+                    dataType: "json"
+                    /* TODO Uzupełnij jquery post */ 
+                })
+            } else {
+                closeAll();
+                document.querySelector('#editorPanel').classList.add('active');
+                document.querySelector('[data-target="editorPanel"]').classList.add('active');
+            }
+        }
+    })
 }
+
+(function() {
+    var Editor = {};
+    Editor.init = function() {
+
+    }
+
+    this.Editor = Editor;
+})();

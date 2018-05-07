@@ -102,7 +102,7 @@ Person.prototype.add_to_sidebar = function () {
     var t = template.replace('$name', this.fullname(false))
         .replace('$date_b', this.birth_day)
         .replace('$date_d', this.death_day)
-        .replace('$pid', this.id);
+        .replace('$id', this.id);
     var list_node = $(t);
 
     list_node.find('.person-wrapper').on('click', function (ev) {
@@ -139,7 +139,7 @@ Person.prototype.add_to_map = function () {
         this.fullname(false),
         "</p>",
         "<p id='popup-dates'><span>", this.birth_day, "</span> - <span>", this.death_day, "</span></p>",
-        "<p><a href=\"https://www.google.com/maps/?q=" + this.coords[0] + "," + this.coords[1] + "\">Nawiguj ( na stronie Google Maps )</a></p>"
+        "<p><a href=\"https://www.google.com/maps/?q=" + this.coords[0] + "," + this.coords[1] + "\"/>Nawiguj ( na stronie Google Maps )</a></p>"
     ].join("");
     this.popup = L.popup().setLatLng(this.coords).setContent(popup_content);
     /*

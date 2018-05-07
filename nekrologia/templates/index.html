@@ -80,8 +80,16 @@
                 </div>
                 <div id="left-sidebar__content">
                     <ul id='person-list__wrapper'>
-                        <!--
-                            <li class='person-list__item' data-person-id='jan_kowalski'>
+                        {{for grave in graves}}
+                        <li class='person-list__item' data-person-id="{{grave['id']}}">
+                            <div class='person-wrapper'>
+                                <div class='name'>{{grave['full_name_with_title']}}</div>
+                                <div class='dates'><span>{{grave['date_of_birth']}}</span> - <span>{{grave['date_of_death']}}</span></div>
+                            </div>
+                        </li>
+                        {{endfor}}
+                            <!-- 
+                            <li class='person-list__item' data-person-id="{{grave['id']}}">
                                 <div class='person-wrapper'>
                                     <div class='name'>Imię Nazwisko</div>
                                     <div class='dates'>Data Urodzenia</div>
@@ -91,7 +99,7 @@
                                     <button id='b_descr'>Opis</button>
                                 </div>
                             </li>
-                        -->
+                            -->
                     </ul>
                 </div>
             </div>

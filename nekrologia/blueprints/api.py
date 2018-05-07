@@ -1,20 +1,11 @@
 from .auth import login_required
-from flask import g, current_app, Blueprint, request, render_template, url_for, session
+from flask import g, current_app, Blueprint, request, render_template, url_for, session, send_file 
 from nekrologia.db import get_db 
-from nekrologia.cache import CACHE
+from nekrologia.cache import get_cache, get_cached_resource, update_cache
 from werkzeug.security import generate_password_hash
 from functools import wraps 
 
 bp = Blueprint('api', __name__)
-
-def update_cache(cached_val_name):
-    def cache_wrapper(method):
-        @wraps(method)
-        def wrapped(self, *args, **kwargs):
-            method(self, *args, **kwargs)
-            assert cached_val_name in CACHE, "No such value in cache as " + cached_val_name
-            CACHE[catched_val_name].update()
-
 
 class BaseEndpoint:
     def connect(self, action, data = None):
@@ -97,6 +88,12 @@ class InternalEndpoint(BaseEndpoint):
         sql = "INSERT INTO user {} VALUES {}".format(', '.join(fields), ','.join(['?']*len(fields)))
         placeholders = [ data[key] for key in fields ]
         get_db().execute(sql, placeholders).commit()
+        
+        long_text = data['description']
+        path = os.path.join(current_app.instance_path, '/res/osoba/' + data['id'] + ".html")
+        with open(path, 'w') as fi:
+            fi.write(long_text)
+
         return {"status_msg" : "ok"} 
 
     @update_cache('cementaries')
@@ -193,11 +190,34 @@ class InternalEndpoint(BaseEndpoint):
 
 class ExternalEndpoint(BaseEndpoint):
     def do_list(self, data):
-        pass 
+        param = data['param']
+        if param == 'grave':
+            return get_cached_resource('graves').copy()
+        elif param == 'user' and 'is_admin' is g and g.is_admin == True:
+            return get_cached_resource('users').copy()
+        elif param == 'cementary':
+            return get_cached_resource('cementaries').copy()
     
-    def do_describe(self, data):
-        pass 
+    def do_show(self, data):
+        param = data['param']
+        if param not in ("grave", "cementary", "user"):
+            print("Bade Request :: wrong parameter")
+            return {"status_msg" : "Wrong param"}
+        db = get_db()
+        if param == 'grave':
+            row = db.execute('SELECT * FROM grave WHERE id=?', (data['id'],)).fetchone()
+            return dict(row)
+        elif param == 'cementary':
+            row = db.execute('SELECT * FROM cementary WHERE id=?', (data['id'],)).fetchone()
+            return dict(row) 
+        elif param == 'user':
+            row = db.execute('SELECT * FROM user WHERE id=?', (data['id'],)).fetchone()
+            return dict(row)   
+
         
+@bp.route('/api/person/<int:user_id>', methods = ['GET'])
+def grave(user_id):
+    return send_file(os.path.join(current_app.instance_path, '/res/osoba/{}.html'.format(user_id)))
 
 @bp.route('/api/internal', methods = ['POST', 'GET'])
 @login_required

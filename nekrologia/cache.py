@@ -1,5 +1,21 @@
-from flask import jsonify 
+from flask import Flask, jsonify, current_app
 from nekrologia.db import get_db
+from functools import wraps 
+
+
+def update_cache(cached_val_name):
+    def cache_wrapper(method):
+        @wraps(method)
+        def wrapped(self, *args, **kwargs):
+            cache = get_cache()
+            assert cached_val_name in cache, "No such key as {} in cache".format(cached_val_name)
+            method(self, *args, **kwargs)
+            for val in cache.values():
+                val.update()
+        return wrapped 
+    return cache_wrapper
+            #assert cached_val_name in CACHE, "No such value in cache as " + cached_val_name
+            #CACHE[catched_val_name].update()
 
 
 def update_cache_graves():
@@ -17,28 +33,39 @@ def update_cache_users():
     user_dict = { user['id'] : dict(user) for user in users }    
     return user_dict 
 
-
-CACHE = {}
-
 class Cached:
-    def __init__(self, data, update_callback):
-        self.data = data
+    def __init__(self, update_callback):
+        self._data = None
         self._update = update_callback 
     
-    def json(self):
-        return jsonify(deepcopy(self.data))
+    def copy(self):
+        return deepcopy(self.data)
 
     def update(self):
-        self._update()
+        self._data = self._update()
 
-
-def add_cached_resource(name, update_callback, start_data = None):
-    global CACHE 
-    data = update_callback() if start_data == None else start_data  
-    CACHE[name] = Cached(data, update_callback)
 
 def init_cache():
-    add_cached_resource('graves', update_cache_graves)
-    add_cached_resource('cementaries', update_cache_cementaries)
-    add_cached_resource('users', update_cache_users)
-    
+    cache = {
+        'graves' : Cached(update_cache_graves),
+        'cementaries' : Cached(update_cache_cementaries),
+        'users' : Cached(update_cache_users)
+    }
+    return cache 
+
+def init_app(app : Flask):
+    app.teardown_appcontext(close_cache)
+
+def get_cached_resource(name : str) -> Cached:
+    return get_cache()[name];
+
+def get_cache() -> Dict[str, Cached]:
+    if 'cache' not in g:
+        g.cache = init_cache()
+        for cached in g.cache.values():
+            cached.update()
+    return g.cache
+
+def close_cache(e = None):
+    g.pop('cache', None)
+    return 

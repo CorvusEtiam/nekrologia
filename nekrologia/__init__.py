@@ -1,9 +1,10 @@
 import os 
-from flask import Flask, send_from_directory, jsonify    
+from flask import Flask, send_from_directory, jsonify, request     
 import logging 
 import sys 
 from nekrologia import db 
 from nekrologia.blueprints import auth, panel, api 
+from nekrologia import cache 
 
 def setup_logging():
     logger = logging.getLogger('nekrologia')
@@ -34,18 +35,17 @@ def create_app(test_config=None):
         pass 
  
     db.init_app(app)
-    logger.info('Datebase initialized')
-    logger.info('PYTHON VERSION: ' + sys.version)
+    cache.init_app(app)   
     
-    init_cache()
-
     app.register_blueprint(auth.bp)
     app.register_blueprint(panel.bp)
     app.register_blueprint(api.bp)
-    
-    @app.route('/')
+    # select(columns = '*', table = 'name', where='')
+    @app.route('/', methods = ['GET'])
     def root():
-        return render_template("index.html")
+        if request.method == 'GET':
+            city = request.param['city']
+        return render_template("index.html", graves = cache.get_cached_resource('graves').copy())
 
     @app.route('/src/<path:path>')
     def send_js(path):

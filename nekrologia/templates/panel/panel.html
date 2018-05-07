@@ -33,6 +33,7 @@
             <section class='sidebar__item' id='cementaryOpenner' data-target='cementaryPanel'>Dodaj cmentarz</section>
         </aside>    
         <section class='panel__container'>
+            {{if g.is_admin }}
             <section class='panel__item' id='adminUserPanel'>
                 <section class='panel__inside'>
                 <table class='users__table'> 
@@ -48,58 +49,62 @@
                     </thead>
                     <tbody>
                         {% for user in users %}
-                        <tr>
+                        <tr data-user-id="{{user['id']}}">
                             <td>{{user['username']}}</td>
                             <td>{{user['email']}}</td>
                             <td>{% if user['admin_permit'] == 1 %}<span class='yes'>Y</span>{% else %}<span class='no'>N</span>{% endif %}</td>
                             <td>{% if user['activated'] == 1 %}<span class='yes'>Y</span>{% else %}<span class='no'>N</span>{% endif %}</td>
-                            <td><button class='remove-button' data-target="{{user['id']}}">Usuń</button></td>
-                            <td><button class='edit-button' data-target="{{user['id']}}">Edytuj</button></td>                            
+                            <td><button class='btn__remove' data-target="{{user['id']}}">Usuń</button></td>
+                            <td><button class='btn__edit' data-target="{{user['id']}}">Edytuj</button></td>                            
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+                </section>
             </section>
-            </section>
+            {{endif}}
             <section class='panel__item' id='metadataPanel'>
                 <form class='panel__form'>
-                    <fieldset class='panel__block'>
-                        <legend>Imię i nazwisko:</legend>
-                        <input type="text" name="first_name" id='meta-first-name' />
-                        <input type="text" name="second_name" id='meta-second-name' />
-                    </fieldset>
-                    <fieldset  class='panel__block'>
-                        <legend>Data i miejsce urodzenia:</legend>
-                        <input type="text" name="birth" id='meta-birth' />
-                        <input type="text" name="birth-city" id='meta-birth-city' />
-                    </fieldset>
-                    <fieldset  class='panel__block'>
-                        <legend>Data i miejsce śmierci:</legend>
-                        <input type="text" name="death" id='meta-death' />
-                        <input type="text" name="death-city" id='meta-birth-city' />
-                    </fieldset>
-                    <fieldset class='panel__block'>
-                        <label for="age">Wiek:</label>
-                        <input type="text" name="age" id='meta-age' />
-                    </fieldset>
-                    <fieldset class='panel__block'>
-                        <legend>GPS:</legend>
-                        <input type="text" name="gps-w" id='meta-gps-width' />
-                        <input type="text" name="gps-h" id='meta-gps-height' />
-                    </fieldset>
-                    <div class='panel__block'>
-                        <label for="university">Uniwersytet</label>
-                        <select name='university'></select>
-                    </div>
-                    <div class='panel__block'>
-                        <label for="graveyard">Cmentarz</label>
-                        <select name='graveyard'></select>
-                        <button id='add-graveyard' class='panel__button--add'>Dodaj cmentarz</button>
-                    </div>
-                    <div class='panel__block'>
-                        <button class='panel__button--save'>Zapisz</button>
-                        <button class='panel__button--warn'>Anuluj</button>
-                    </div>
+                    <section id='form__group'>
+                        <label for="name">Imię: </label>
+                        <input type="text" name="name" id='metaName' />
+                        <label for="surname">Nazwisko: </label>
+                        <input type="text" name="surname" id='metaSurname' />
+                        <label for="title">Tytuł naukowy: </label>
+                        <input type="text" name="title" id='metaTitle' placeholder = 'Tytuł naukowy'/>
+                        <label for="title">Pełne imię i nazwisko wraz z tytułem naukowym: </label>
+                        <input type="text" name="full_name_with_title" id='metaTitle' />
+                    </section>
+                    <section class="form__group">
+                        <label for="date_of_birth">Data urodzenia</label>      
+                        <input type="date" name="date_of_birth" id='metaBirthDate' />
+                    <section>
+                    <section  class='form__group'>
+                        <label for="date_of_death">Data śmierci:</label>
+                        <input type="date" name="date_of_death" id='metaDeathDate' />
+                    </section>
+                    <section class="form__group">
+                        <label for="age">Wiek: </label>
+                        <input type="number"/>
+                    </section> 
+                    <section class="form__group">
+                        <label for="cementary_id">Cmentarz</label>
+                        <select name="cementary_id">
+                            {% for cementary in cementaries %}
+                            <option value="{{cementary['id']}}">{{cementary['name']}}</option>
+                            {% endfor %}
+                        </select>
+                    </section>
+                    <section class="form__group">
+                        <label for="gps_lon">Długość GPS: </label>
+                        <input type="text" placeholder="GPS -- dł. w formacie xx.xxxxxx"/>
+                        <label for="gps_lat">Szerokość GPS: </label>
+                        <input type="text" placeholder="GPS -- szer. w formacie xx.xxxxxx"/>
+                    </section> 
+                        
+                    <section class='form__group'>
+                        <button class='panel__button--save' id='metadateEditorSaveButton'>Zapisz</button>
+                    </section>
                 </form>
             </section> <!-- section#metadataPanel -->
             <section class="panel__item" id="editorPanel">
@@ -116,7 +121,16 @@
                 </section>
             </section> <!-- section#editorPanel -->
             <section class='panel__item' id='cementaryPanel'>
-
+                <form>
+                    <section class='form__group'>
+                        <label for="full_name">Nazwa cmentarza</label>
+                        <input type="text" name="full_name" id="cementaryFullName"/>
+                        <label for="full_address">Adres cmentarza</label>
+                        <input type="text" name="full_address" id="cementaryFullAddress"/>
+                        <label for="city">Miasto</label>
+                        <input type="text" name="city" id="cementaryCity"/>
+                    </section>
+                </form>
             </section>
         </section>
     </main>
