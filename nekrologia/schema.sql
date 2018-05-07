@@ -11,12 +11,15 @@ CREATE TABLE user (
     activated BOOLEAN NOT NULL 
 );
 
+
 CREATE TABLE cementary (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    full_name TEXT UNIQUE NOT NULL,
-    full_address TEXT UNIQUE NOT NULL,
-    city TEXT NOT NULL
+    full_name TEXT UNIQUE NOT NULL, -- Cmentarz Jan Vianney 
+    full_address TEXT UNIQUE NOT NULL, -- Cmentarz Jana Vianney ul. ZZZ
+    city TEXT NOT NULL -- Poznań
 );
+
+--- select all cementaries where city = Poznań
 
 CREATE TABLE grave (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

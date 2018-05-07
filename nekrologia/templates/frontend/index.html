@@ -80,14 +80,14 @@
                 </div>
                 <div id="left-sidebar__content">
                     <ul id='person-list__wrapper'>
-                        {{for grave in graves}}
+                        {% for grave in graves %}
                         <li class='person-list__item' data-person-id="{{grave['id']}}">
                             <div class='person-wrapper'>
                                 <div class='name'>{{grave['full_name_with_title']}}</div>
                                 <div class='dates'><span>{{grave['date_of_birth']}}</span> - <span>{{grave['date_of_death']}}</span></div>
                             </div>
                         </li>
-                        {{endfor}}
+                        {% endfor %}
                             <!-- 
                             <li class='person-list__item' data-person-id="{{grave['id']}}">
                                 <div class='person-wrapper'>

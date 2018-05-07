@@ -1,10 +1,14 @@
 import os 
-from flask import Flask, send_from_directory, jsonify, request     
 import logging 
 import sys 
-from nekrologia import db 
-from nekrologia.blueprints import auth, panel, api 
+
+from flask import Flask, send_from_directory, jsonify, request, render_template     
+from nekrologia import db
+from nekrologia.db import get_db 
+from nekrologia.blueprints import auth, panel, api, frontend
 from nekrologia import cache 
+
+from requests.utils import quote, unquote 
 
 def setup_logging():
     logger = logging.getLogger('nekrologia')
@@ -37,16 +41,18 @@ def create_app(test_config=None):
     db.init_app(app)
     cache.init_app(app)   
     
+    app.register_blueprint(frontend.bp)
     app.register_blueprint(auth.bp)
     app.register_blueprint(panel.bp)
     app.register_blueprint(api.bp)
-    # select(columns = '*', table = 'name', where='')
-    @app.route('/', methods = ['GET'])
-    def root():
-        if request.method == 'GET':
-            city = request.param['city']
-        return render_template("index.html", graves = cache.get_cached_resource('graves').copy())
-
+    
+    @app.context_processor
+    def utility_processor():
+        def encode_url(name):
+            return quote(name)
+        return dict(quote=encode_url)
+    
+    
     @app.route('/src/<path:path>')
     def send_js(path):
         return send_from_directory('src', path)

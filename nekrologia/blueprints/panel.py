@@ -8,7 +8,7 @@ bp = Blueprint('panel', __name__)
 @login_required
 def panel():
     users = get_db().execute("SELECT * FROM user").fetchall()
-    cementaries = get_db().execute("SELECT * FROM cementaries").fetchall()
+    cementaries = get_db().execute("SELECT * FROM cementary").fetchall()
     
     return render_template("panel/panel.html", users = users, cementaries = cementaries)
 

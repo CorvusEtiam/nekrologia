@@ -10,13 +10,14 @@
 <body>
     <main class='container'>
         <div class='container__'>
-            <header>Wybierz uniwersytet: </header>
+            <header>Wybierz miasto z którego profesorów chcesz wyszukać: </header>
             <div class="panel__container">
+                {% for city in cities %}
                 <div class='panel__tile'>
-                    <a href='index.html&university={{uni['id']}}'>
-                    <img class='panel__icon' src="img/logo_{{uni['id']}}.png"/>
-                    <p>{{uni['name']}}</p>
+                    <a href='index/{{ quote(city) }}'>
+                    <p>{{city}}</p>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>

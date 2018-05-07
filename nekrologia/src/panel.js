@@ -88,7 +88,7 @@ function init_user_manager() {
 
 window.onload = function() {
     init_sidebar();
-    document.getElementById('#metadataPanelSaveButton').addEventListener('click', function(ev) {
+    document.getElementById('metadataPanelSaveButton').addEventListener('click', function(ev) {
         var data = {}
         document.querySelectorAll('#metadataPanel > input').forEach(function(el) {
             data[el.getAttribute('name')] = el.value;
@@ -112,13 +112,29 @@ window.onload = function() {
             }
         }
     })
-}
+
+    document.getElementById('cementaryPanelSaveButton').addEventListener('click', function(ev) {
+        var form_data = {};
+        document.querySelectorAll('#cementaryNewForm > input').forEach(function(el) {
+            form_data[el.getAttribute('name')] = el.value();    
+        })
+        form_data['action'] = 'create'
+        form_data['param'] = 'cementary'
+        $.post('api/internal', form_data, function(res) {
+            if ( res !== undefined && res['status_msg'] !== undefined ) {
+                if (res.status_msg == 'ok') {
+                    alert('Cmentarz został dodany do listy');
+                } else {
+                    alert("Nastapił błąd: \n " + res.status_msg);
+                }
+            }
+        });
+    })
+};
 
 (function() {
-    var Editor = {};
-    Editor.init = function() {
+    this.Editor = {};
+    this.Editor.init = function() {
 
     }
-
-    this.Editor = Editor;
 })();

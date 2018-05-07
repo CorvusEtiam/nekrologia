@@ -108,7 +108,9 @@ class InternalEndpoint(BaseEndpoint):
         city TEXT NOT NULL
         """
         sql = "INSERT INTO (full_name, full_address, city) VALUES (?, ?, ?)"
-        get_db().execute(sql, (data['full_name'], data['full_address'], data['city'])).commit()
+        conn = get_db()
+        conn.execute(sql, (data['full_name'], data['full_address'], data['city']))
+        conn.commit()
         return {"status_msg" : "ok"} 
 
     def do_update(self, data):

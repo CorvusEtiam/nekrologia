@@ -33,7 +33,7 @@
             <section class='sidebar__item' id='cementaryOpenner' data-target='cementaryPanel'>Dodaj cmentarz</section>
         </aside>    
         <section class='panel__container'>
-            {{if g.is_admin }}
+            {% if g.is_admin %}
             <section class='panel__item' id='adminUserPanel'>
                 <section class='panel__inside'>
                 <table class='users__table'> 
@@ -62,7 +62,7 @@
                 </table>
                 </section>
             </section>
-            {{endif}}
+            {% endif %}
             <section class='panel__item' id='metadataPanel'>
                 <form class='panel__form'>
                     <section id='form__group'>
@@ -78,7 +78,7 @@
                     <section class="form__group">
                         <label for="date_of_birth">Data urodzenia</label>      
                         <input type="date" name="date_of_birth" id='metaBirthDate' />
-                    <section>
+                    </section>
                     <section  class='form__group'>
                         <label for="date_of_death">Data śmierci:</label>
                         <input type="date" name="date_of_death" id='metaDeathDate' />
@@ -103,7 +103,7 @@
                     </section> 
                         
                     <section class='form__group'>
-                        <button class='panel__button--save' id='metadateEditorSaveButton'>Zapisz</button>
+                        <button class='panel__button--save' id='metadataPanelSaveButton'>Zapisz</button>
                     </section>
                 </form>
             </section> <!-- section#metadataPanel -->
@@ -121,7 +121,8 @@
                 </section>
             </section> <!-- section#editorPanel -->
             <section class='panel__item' id='cementaryPanel'>
-                <form>
+                <p>Some text</p>
+                <form method='POST' id='cementaryNewForm'>
                     <section class='form__group'>
                         <label for="full_name">Nazwa cmentarza</label>
                         <input type="text" name="full_name" id="cementaryFullName"/>
@@ -129,6 +130,7 @@
                         <input type="text" name="full_address" id="cementaryFullAddress"/>
                         <label for="city">Miasto</label>
                         <input type="text" name="city" id="cementaryCity"/>
+                        <button type="button" id="cementaryPanelSaveButton">Zapisz cmentarz</button>
                     </section>
                 </form>
             </section>
@@ -138,6 +140,6 @@
     <!-- content -->
     <!-- -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="src/panel.js"></script>
+    <script src="src/panel.js?version=1.1"></script>
 </body>
 </html>
