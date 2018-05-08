@@ -237,6 +237,7 @@ def grave(user_id):
 def internal():
     if request.method == 'POST':
         data = request.json
+        
         external = InternalEndpoint(data)
         return jsonify(external.run())
 

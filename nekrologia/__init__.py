@@ -48,7 +48,7 @@ def create_app(test_config=None):
     @app.context_processor
     def utility_processor():
         def encode_url(name):
-            return quote(name)
+            return quote(name.encode('utf-8'))
         return dict(quote=encode_url)
     
     
