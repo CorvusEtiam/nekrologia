@@ -1,9 +1,22 @@
+* {
+    box-sizing: border-box;
+}
+
 .container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    border: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     width: 100vw;
     height: 100vh;
-    background: forestgreen;
+}
+.container__header, .container__footer {
+    height: 5em;
+    background-color: forestgreen;
+    width: 100%;
 }
 
 .container__content {
@@ -17,7 +30,12 @@
 }
 
 .panel__tile {
+    background: white;
     width: 180px;
     height: 180px;
+    box-shadow: 0px 0px 10px #ccc; 
 }
 
+.panel__text {
+    text-align: center;
+}

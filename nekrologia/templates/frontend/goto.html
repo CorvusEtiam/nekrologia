@@ -4,22 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" type="text/css" href="styles/goto.html">
+    <link rel="stylesheet" type="text/css" href="styles/goto.css">
     <title></title>
 </head>
 <body>
     <main class='container'>
-        <div class='container__'>
+        <header class="container__header"></header>
+        <div class='container__content'>
             <header>Wybierz miasto z którego profesorów chcesz wyszukać: </header>
             <div class="panel__container">
                 {% for city in cities %}
                 <div class='panel__tile'>
-                    <a href='index/{{ quote(city) }}'>
-                    <p>{{city}}</p>
+                    <a class="panel__link" href='index?city={{ quote(city) }}'>
+                        <p class="panel__text">{{city}}</p>
+                    </a>
                 </div>
                 {% endfor %}
             </div>
         </div>
+        <footer class="container__footer"></footer>
     </div>
 </body>
 </html>

@@ -181,3 +181,33 @@
 2018-05-06 21:55:28,109 - nekrologia - INFO - Datebase initialized
 2018-05-06 21:55:28,110 - nekrologia - INFO - PYTHON VERSION: 3.5.2 (default, Nov 23 2017, 16:37:01) 
 [GCC 5.4.0 20160609]
+2018-05-09 16:12:07,278 - nekrologia - INFO - City: Poznań
+2018-05-09 16:12:07,322 - nekrologia - INFO - Graves: []
+2018-05-09 16:20:10,961 - nekrologia - INFO - City: Poznań
+2018-05-09 16:20:10,962 - nekrologia - INFO - Graves: [<sqlite3.Row object at 0x7fda3811f610>]
+2018-05-09 16:28:24,849 - nekrologia - INFO - City: Poznań
+2018-05-09 16:28:24,850 - nekrologia - INFO - Graves: [{'cementary_id': 1, 'full_name': 'Cmentarz Sołacki Jana Vianneya', 'full_name_with_title': 'Prof. dr. hab. Tadeusz Cybulko', 'id': 1, 'city': 'Poznań', 'date_of_death': '10-10-2010', 'date_of_birth': '22-04-1929'}]
+2018-05-09 16:33:13,392 - nekrologia - INFO - City: None
+2018-05-09 16:33:13,392 - nekrologia - INFO - Graves: [{'full_name_with_title': 'Prof. dr. hab. Tadeusz Cybulko', 'date_of_birth': '22-04-1929', 'full_name': 'Cmentarz Sołacki Jana Vianneya', 'city': 'Poznań', 'date_of_death': '10-10-2010', 'id': 1, 'cementary_id': 1}]
+2018-05-09 16:36:24,056 - nekrologia - INFO - City: Poznań
+2018-05-09 16:36:24,057 - nekrologia - INFO - Graves: [<sqlite3.Row object at 0x7fefdeabfad0>]
+2018-05-09 16:36:37,836 - nekrologia - INFO - City: Poznań
+2018-05-09 16:36:37,837 - nekrologia - INFO - Graves: [<sqlite3.Row object at 0x7fefdeabfa70>]
+2018-05-09 16:37:58,935 - nekrologia - INFO - City: Poznań
+2018-05-09 16:37:58,963 - nekrologia - INFO - Graves: [<sqlite3.Row object at 0x7fbc88fb8910>]
+2018-05-09 16:39:06,645 - nekrologia - INFO - City: Poznań
+2018-05-09 16:39:06,645 - nekrologia - INFO - Graves: [<sqlite3.Row object at 0x7fbc88b6d090>]
+2018-05-09 16:39:34,313 - nekrologia - INFO - City: Poznań
+2018-05-09 16:39:34,313 - nekrologia - INFO - Graves: [<sqlite3.Row object at 0x7fbc88b6d530>]
+2018-05-09 16:39:40,148 - nekrologia - INFO - City: Poznań
+2018-05-09 16:39:40,148 - nekrologia - INFO - Graves: [<sqlite3.Row object at 0x7fbc88b6d990>]
+2018-05-09 16:39:59,315 - nekrologia - INFO - City: Poznań
+2018-05-09 16:39:59,315 - nekrologia - INFO - Graves: [<sqlite3.Row object at 0x7fbc88b6d8f0>]
+2018-05-09 16:40:52,848 - nekrologia - INFO - City: Poznań
+2018-05-09 16:40:52,848 - nekrologia - INFO - Graves: [<sqlite3.Row object at 0x7fbc88b6df30>]
+2018-05-09 16:40:53,502 - nekrologia - INFO - City: Poznań
+2018-05-09 16:40:53,502 - nekrologia - INFO - Graves: [<sqlite3.Row object at 0x7fbc7b55b170>]
+2018-05-09 16:41:02,838 - nekrologia - INFO - City: Poznań
+2018-05-09 16:41:02,839 - nekrologia - INFO - Graves: [<sqlite3.Row object at 0x7fbc88b6d8f0>]
+2018-05-09 14:41:17,621 - nekrologia - INFO - City: Poznań
+2018-05-09 14:41:17,621 - nekrologia - INFO - Graves: [<sqlite3.Row object at 0x7fbc88b6d8f0>]

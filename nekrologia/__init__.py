@@ -51,7 +51,7 @@ def create_app(test_config=None):
             return quote(name.encode('utf-8'))
         return dict(quote=encode_url)
     
-    
+### Resources     
     @app.route('/src/<path:path>')
     def send_js(path):
         return send_from_directory('src', path)
@@ -63,10 +63,5 @@ def create_app(test_config=None):
     @app.route('/images/<path:path>')
     def send_images(path):
         return send_from_directory('images', path)
-
-    @app.route("/res/<path:path>")
-    def endpoint_json(path):
-        js = json.load(open("./nekrologia/res/" + path, 'r', encoding="utf-8"))
-        return jsonify(js)
 
     return app 
