@@ -113,119 +113,6 @@ class InternalEndpoint(BaseEndpoint):
         conn.commit()
         return {"status_msg" : "ok"} 
 
-    def do_update(self, data):
-        try:
-            param = data['param']
-        except KeyError as key:
-            print("Bad Request :: {!r}".format(data))
-            return { 'status_msg' : 'no param specified' }
-
-        if param == 'grave':
-            return self._update_grave(data)
-        elif param == 'user':
-            return self._update_user(data)
-        elif param == 'cementary':
-            return self._update_cementary(data)
-        else:
-            print("Bad Request :: {!r}".format(data))
-            return { 'status_msg' : 'incorrect param specified', 'param' : param }
-     
-    @update_cache('graves') 
-    def _update_grave(self, data):
-        fields = ("name", "surname", "title", "full_name_with_title", "date_of_birth", "date_of_death", "cementary_id", "gps_lon", "gps_lat")
-        out = {}
-        target = data['id']
-        for k, v in data.items():
-            if k in fields and v != None:
-                out[k] = v 
-        keys = list(out.keys())
-        
-        columns = ', '.join([key + ' = ?' for key in keys])
-        
-        vals = list(out.values())
-        vals.append(target)
-
-        sql = 'UPDATE grave SET {} WHERE id=?'.format(columns)
-
-        get_db().execute(sql, vals).commit()
-        return {"status_msg" : "ok"} 
-
-    @update_cache('users')     
-    def _update_user(self, data):
-        fields = ("username", "email", "password_hash", "admin_permit", "activated")
-        out = {}
-        target = data['id']
-        for k, v in data.items():
-            if k in fields and v != None:
-                out[k] = v 
-        if 'password' in data:
-            out['password_hash'] = generate_password_hash(data['password'])
-        
-
-        keys = list(out.keys())
-        
-        columns = ', '.join([key + ' = ?' for key in keys])
-        
-        vals = list(out.values())
-        vals.append(target)
-
-        sql = 'UPDATE user SET {} WHERE id=?'.format(columns)
-
-        get_db().execute(sql, vals).commit()
-        return {"status_msg" : "ok"} 
-    
-    @update_cache('cementary')
-    def _update_cementary(self, data):
-        fields = ("full_name", "full_address", "city")
-        out = {}
-        target = data['id']
-        for k, v in data.items():
-            if k in fields and v != None:
-                out[k] = v 
-        keys = list(out.keys())
-        
-        columns = ', '.join([key + ' = ?' for key in keys])
-        
-        vals = list(out.values())
-        vals.append(target)
-
-        sql = 'UPDATE cementary SET {} WHERE id=?'.format(columns)
-
-        get_db().execute(sql, vals).commit()
-        return {"status_msg" : "ok"} 
-
-class ExternalEndpoint(BaseEndpoint):
-    def do_list(self, data):
-        param = data['param']
-        if param == 'grave':
-            return get_cached_resource('graves').copy()
-        elif param == 'user': # and 'is_admin' in g and g.is_admin == True:
-            return get_cached_resource('users').copy()
-        elif param == 'cementary':
-            return get_cached_resource('cementaries').copy()
-    
-    def do_show(self, data):
-        param = data['param']
-        if param not in ("grave", "cementary", "user"):
-            print("Bade Request :: wrong parameter")
-            return {"status_msg" : "Wrong param"}
-        db = get_db()
-        if param == 'grave':
-            row = db.execute('SELECT * FROM grave WHERE id=?', (data['id'],)).fetchone()
-            if row is None:
-                return dict(status_message = "No such grave")
-            return dict(row)
-        elif param == 'cementary':
-            row = db.execute('SELECT * FROM cementary WHERE id=?', (data['id'],)).fetchone()
-            if row is None:
-                return dict(status_message = "No such cementary")
-            
-            return dict(row) 
-        elif param == 'user':
-            row = db.execute('SELECT * FROM user WHERE id=?', (data['id'],)).fetchone()
-            if row is None:
-                return dict(status_message = "No such user")
-            return dict(row)   
 
         
 @bp.route('/api/person/<int:user_id>', methods = ['GET'])
@@ -240,13 +127,141 @@ def internal():
         
         external = InternalEndpoint(data)
         return jsonify(external.run())
-
      
-@bp.route('/api/external', methods = ['POST', 'GET'])
-def external():
+@bp.route('/api/list/<string:tablename>', methods = ['POST'])
+def list_resource(tablename):
+    if tablename not in ('users', 'graves', 'cementaries'):
+        return jsonify({'status_msg' : 'Unkown resource %s' % (tablename, )})
+    res = get_db().execute('SELECT * FROM ?', (tablename, )).fetchall()
+    return jsonify({ row['id'] : dict(row) for row in users })
+ 
+@bp.route('/api/show/<string:tablename>', methods = ['POST']):
+def show_data(tablename):
     if request.method == 'POST':
-        data = request.json 
-        external = ExternalEndpoint(data)
-        return jsonify(external.run())
+        res_id = request.values.get('id')
+        if res_id == None:
+            return jsonify({'status_msg' : 'No' + tablename +  'specified'})
+        else:
+            if tablename not in ('grave', 'cementary', 'user'):
+                return jsonify({'status_msg' : 'Table: ' + tablename + " is unknown"})
+            data = get_db().execute('SELECT * FROM ? WHERE id = ?', (tablename, res_id)).fetchone()
+            return jsonify(dict(user))
+
+def api_create_user():
+    sql = "INSERT INTO user (username, email, password_hash, admin_permit, activated) VALUES (?,?,?,0,0)"
+    data = dict(request.values) 
+    try:
+        placeholders = (data['username'], data['email'], generate_password_hash(data['password']))
+    except KeyError as ke:
+        return jsonify({'status_msg' : 'Missing field :: ' + ke.message})
+    db = get_db()
+    db.execute(sql, placeholders)
+    db.commit()
+    return {"status_msg" : "ok"}
+
+def api_create_grave():
+    """
+    1. name TEXT NOT NULL,
+    2. surname TEXT NOT NULL,
+    3. title TEXT NOT NULL,
+    4. full_name_with_title TEXT NOT NULL,
+    5. date_of_birth TEXT,
+    6. date_of_death TEXT,
+    7. cementary_id INTEGER NOT NULL,
+    8. gps_lon FLOAT,
+    9. gps_lat FLOAT, 
+    """ 
+    data = dict(request.values)
+    fields = ("name", "surname", "title", "full_name_with_title", "date_of_birth", "date_of_death", "cementary_id", "gps_lon", "gps_lat")
+    sql = "INSERT INTO user {} VALUES {}".format(', '.join(fields), ','.join(['?']*len(fields)))
+    try:
+        placeholders = [ data[key] for key in fields ]
+    except KeyError as ke:
+        return jsonify({'status_msg' : 'Missing field :: ' + ke.message})
+
+    db = get_db()
+    db.execute(sql, placeholders)
+    db.commit()
+    
+    long_text = data['description']
+    path = os.path.join(current_app.instance_path, '/res/osoba/' + data['id'] + ".html")
+    with open(path, 'w') as fi:
+        fi.write(long_text)
+    return {"status_msg" : "ok"} 
+
+
+def api_create_cementary():
+    """
+    full_name TEXT UNIQUE NOT NULL,
+    full_address TEXT UNIQUE NOT NULL,
+    city TEXT NOT NULL
+    """
+    data = dict(request.values)
+    sql = "INSERT INTO (full_name, full_address, city) VALUES (?, ?, ?)"
+    try:
+        placeholders = (data['full_name'], data['full_address'], data['city'])
+    except KeyError as ke:
+        return jsonify({'status_msg' : 'Missing field :: ' + ke.message})
+    
+    conn = get_db()
+    conn.execute(sql, placeholders)
+    conn.commit()
+    return {"status_msg" : "ok"} 
+
+@bp.route('/api/create/<string:tablename>', methods = ['POST'])
+def create_endpoint(tablename):
+    if tablename == 'grave':
+        return api_create_grave()
+    elif tablename == 'cementary':
+        return api_create_cementary()
+    elif tablename == 'user':
+        return api_create_user()
     else:
-        return jsonify({"status_message" : "idk your response"})
+        return jsonify({ "status_msg" : "Unkown resource " + tablename})
+
+def api_update_helper(target, data, fields):
+    out = { k : v for k,v in data.items() if k in fields and v != None }
+    
+    if 'password' in fields and 'password' in data:
+        out['password_hash'] = generate_password_hash(data['password'])    
+
+    kv = list(out.items())
+    keys = list(item[0] for item in kv)
+    columns = ', '.join([key + ' = ?' for key in keys])
+    
+    vals = list(item[1] for item in kv)
+    
+    vals.append(id)
+    sql = 'UPDATE {} SET {} WHERE id=?'.format(target, columns)
+    db = get_db()
+    db.execute(sql, vals)
+    db.commit()
+    return {"status_msg" : "ok"} 
+
+
+@bp.route('/api/update/<string:param>', methods = ['POST']):
+def update(param):
+    target = data.get('id', None)
+    if target == None:
+        return jsonify({'status_msg' : "key(id) not specified"})
+    
+    if request.json == None:
+        return jsonify({'status_msg' : "AJAX problem -- json not visible for server"})
+    
+    if param == 'grave':
+        fields = ("name", "surname", "title", "full_name_with_title", "date_of_birth", 
+            "date_of_death", "cementary_id", "gps_lon", "gps_lat")
+        
+        return api_update_helper('grave', request.json, fields)
+    elif param == 'user':
+        fields = ("username", "email", "password_hash", "admin_permit", "activated")
+        return api_update_helper('user', request.json, fields)
+
+    elif param == 'cementary':
+        fields = ("full_name", "full_address", "city")
+        return api_update_helper('cementary', request.json, fields)
+
+    else:
+        print("Bad Request :: {!r}".format(data))
+        return { 'status_msg' : 'incorrect param specified', 'param' : param }
+
