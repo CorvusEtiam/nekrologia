@@ -7,127 +7,13 @@ from functools import wraps
 
 bp = Blueprint('api', __name__)
 
-class BaseEndpoint:
-    def __init__(self, data):
-        self._data = data 
-        self._action = data.get('action')
-        self._name = self._action.lower()
-    def run(self):
-        if hasattr(self, 'do_' + self._name):
-            return getattr(self, 'do_'+self._name)(self._data or {})
- 
-
-class InternalEndpoint(BaseEndpoint):
-    def do_remove(self, data):
-        try:
-            param = data['param']
-        except KeyError as key:
-            print("Bad Request :: {!r}".format(data))
-            return jsonify({ 'status_msg' : 'no param specified' })
-
-        if param == 'grave':
-            return self._remove_grave(data)
-        elif param == 'user':
-            return self._remove_user(data)
-        elif param == 'cementary':
-            return self._remove_cementary(data)
-        else:
-            print("Bad Request :: {!r}".format(data))
-            return jsonify({ 'status_msg' : 'incorrect param specified', 'param' : param })
-    
-    @update_cache('graves')
-    def _remove_grave(self, data):
-        get_db().execute('DELETE FROM grave WHERE id=?', (data['id'],)).commit()
-        return {'status_msg' : 'ok' }
-    
-    @update_cache('users')
-    def _remove_user(self, data):
-        get_db().execute('DELETE FROM user WHERE id=?', (data['id'],)).commit()
-        return {'status_msg' : 'ok' }
-    
-    @update_cache('cementaries') 
-    def _remove_cementary(self, data):
-        get_db().execute('DELETE FROM cementary WHERE id=?', (data['id'],)).commit()
-        return {'status_msg' : 'ok' }
-    
-    def do_create(self, data):
-        try:
-            param = data['param']
-        except KeyError as key:
-            print("Bad Request :: {!r}".format(data))
-            return { 'status_msg' : 'no param specified' }
-
-        if param == 'grave':
-            return self._create_grave(data)
-        elif param == 'user':
-            return self._create_user(data)
-        elif param == 'cementary':
-            return self._create_cementary(data)
-        else:
-            print("Bad Request :: {!r}".format(data))
-            return { 'status_msg' : 'incorrect param specified', 'param' : param }
-     
-    @update_cache('users')
-    def _create_user(self, data):
-        sql = "INSERT INTO user (username, email, password_hash, admin_permit, activated) VALUES (?,?,?,0,0)"
-        placeholders = (data['username'], data['email'], generate_password_hash(data['password']))
-        get_db().execute(sql, placeholders)
-        get_db().commit()
-        return {"status_msg" : "ok"}
-
-    @update_cache('graves')
-    def _create_grave(self, data):
-        """
-        1. name TEXT NOT NULL,
-        2. surname TEXT NOT NULL,
-        3. title TEXT NOT NULL,
-        4. full_name_with_title TEXT NOT NULL,
-        5. date_of_birth TEXT,
-        6. date_of_death TEXT,
-        7. cementary_id INTEGER NOT NULL,
-        8. gps_lon FLOAT,
-        9. gps_lat FLOAT, 
-        """ 
-        fields = ("name", "surname", "title", "full_name_with_title", "date_of_birth", "date_of_death", "cementary_id", "gps_lon", "gps_lat")
-        sql = "INSERT INTO user {} VALUES {}".format(', '.join(fields), ','.join(['?']*len(fields)))
-        placeholders = [ data[key] for key in fields ]
-        get_db().execute(sql, placeholders).commit()
-        
-        long_text = data['description']
-        path = os.path.join(current_app.instance_path, '/res/osoba/' + data['id'] + ".html")
-        with open(path, 'w') as fi:
-            fi.write(long_text)
-
-        return {"status_msg" : "ok"} 
-
-    @update_cache('cementaries')
-    def _create_cementary(self, data):
-        """
-        full_name TEXT UNIQUE NOT NULL,
-        full_address TEXT UNIQUE NOT NULL,
-        city TEXT NOT NULL
-        """
-        sql = "INSERT INTO (full_name, full_address, city) VALUES (?, ?, ?)"
-        conn = get_db()
-        conn.execute(sql, (data['full_name'], data['full_address'], data['city']))
-        conn.commit()
-        return {"status_msg" : "ok"} 
-
-
-        
 @bp.route('/api/person/<int:user_id>', methods = ['GET'])
-def grave(user_id):
-    return send_file(os.path.join(current_app.instance_path, '/res/osoba/{}.html'.format(user_id)))
-
-@bp.route('/api/internal', methods = ['POST', 'GET'])
-#@login_required
-def internal():
-    if request.method == 'POST':
-        data = request.json
-        
-        external = InternalEndpoint(data)
-        return jsonify(external.run())
-     
+def person_descr(user_id):
+    path = os.path.join(current_app.instance_path, '/res/osoba/{}.html'.format(user_id))
+    if not os.path.exist(path):
+        path = os.path.join(current_app.instance_path, '/res/osoba/error.html')
+    return send_file(path)
+    
 @bp.route('/api/list/<string:tablename>', methods = ['POST'])
 def list_resource(tablename):
     if tablename not in ('users', 'graves', 'cementaries'):
@@ -136,7 +22,7 @@ def list_resource(tablename):
     return jsonify({ row['id'] : dict(row) for row in users })
  
 @bp.route('/api/show/<string:tablename>', methods = ['POST']):
-def show_data(tablename):
+def show(tablename):
     if request.method == 'POST':
         res_id = request.values.get('id')
         if res_id == None:
@@ -147,75 +33,42 @@ def show_data(tablename):
             data = get_db().execute('SELECT * FROM ? WHERE id = ?', (tablename, res_id)).fetchone()
             return jsonify(dict(user))
 
-def api_create_user():
-    sql = "INSERT INTO user (username, email, password_hash, admin_permit, activated) VALUES (?,?,?,0,0)"
-    data = dict(request.values) 
+def api_create_helper(target, fields, data):
+    sql = "INSERT INTO {} {} VALUES {}".format(target, ', '.join(fields), ','.join(['?']*len(fields)))
     try:
-        placeholders = (data['username'], data['email'], generate_password_hash(data['password']))
-    except KeyError as ke:
-        return jsonify({'status_msg' : 'Missing field :: ' + ke.message})
-    db = get_db()
-    db.execute(sql, placeholders)
-    db.commit()
-    return {"status_msg" : "ok"}
-
-def api_create_grave():
-    """
-    1. name TEXT NOT NULL,
-    2. surname TEXT NOT NULL,
-    3. title TEXT NOT NULL,
-    4. full_name_with_title TEXT NOT NULL,
-    5. date_of_birth TEXT,
-    6. date_of_death TEXT,
-    7. cementary_id INTEGER NOT NULL,
-    8. gps_lon FLOAT,
-    9. gps_lat FLOAT, 
-    """ 
-    data = dict(request.values)
-    fields = ("name", "surname", "title", "full_name_with_title", "date_of_birth", "date_of_death", "cementary_id", "gps_lon", "gps_lat")
-    sql = "INSERT INTO user {} VALUES {}".format(', '.join(fields), ','.join(['?']*len(fields)))
-    try:
-        placeholders = [ data[key] for key in fields ]
+        placeholders = []
+        for key in fields:
+            if key == 'password_hash':
+                placeholders.append(generate_password_hash(data['password']))
+            placeholders.append(data[key])
     except KeyError as ke:
         return jsonify({'status_msg' : 'Missing field :: ' + ke.message})
 
     db = get_db()
     db.execute(sql, placeholders)
-    db.commit()
-    
-    long_text = data['description']
-    path = os.path.join(current_app.instance_path, '/res/osoba/' + data['id'] + ".html")
-    with open(path, 'w') as fi:
-        fi.write(long_text)
-    return {"status_msg" : "ok"} 
-
-
-def api_create_cementary():
-    """
-    full_name TEXT UNIQUE NOT NULL,
-    full_address TEXT UNIQUE NOT NULL,
-    city TEXT NOT NULL
-    """
-    data = dict(request.values)
-    sql = "INSERT INTO (full_name, full_address, city) VALUES (?, ?, ?)"
-    try:
-        placeholders = (data['full_name'], data['full_address'], data['city'])
-    except KeyError as ke:
-        return jsonify({'status_msg' : 'Missing field :: ' + ke.message})
-    
-    conn = get_db()
-    conn.execute(sql, placeholders)
-    conn.commit()
-    return {"status_msg" : "ok"} 
+    db.commit() 
 
 @bp.route('/api/create/<string:tablename>', methods = ['POST'])
-def create_endpoint(tablename):
+def create(tablename):
+    if request.json == None:
+        return jsonify({'status_msg' : "AJAX problem -- json not visible for server"})
+    
     if tablename == 'grave':
-        return api_create_grave()
+        fields = ("name", "surname", "title", "full_name_with_title", "date_of_birth", "date_of_death", "cementary_id", "gps_lon", "gps_lat")
+        result = api_create_helper("grave", fields, request.json)
+        if result is not None:
+            return jsonify(result)
+        long_text = request.json['description']
+        path = os.path.join(current_app.instance_path, '/res/osoba/' + data['id'] + ".html")
+        with open(path, 'w') as fi:
+            fi.write(long_text)
+        return jsonify({"status_msg" : "ok"})
     elif tablename == 'cementary':
-        return api_create_cementary()
+        fields = ("full_name", "full_address", "city")
+        return api_create_helper("cementary", fields, request.json)
     elif tablename == 'user':
-        return api_create_user()
+        fields = ("username", "email", "password_hash", "admin_permit", "activated")
+        return api_create_helper('users', fields, request.json)
     else:
         return jsonify({ "status_msg" : "Unkown resource " + tablename})
 
@@ -238,30 +91,62 @@ def api_update_helper(target, data, fields):
     db.commit()
     return {"status_msg" : "ok"} 
 
-
 @bp.route('/api/update/<string:param>', methods = ['POST']):
 def update(param):
-    target = data.get('id', None)
-    if target == None:
-        return jsonify({'status_msg' : "key(id) not specified"})
-    
     if request.json == None:
         return jsonify({'status_msg' : "AJAX problem -- json not visible for server"})
+    
+    target = request.json.get('id', None)
+    
+    if target == None:
+        return jsonify({'status_msg' : "key(id) not specified"})
     
     if param == 'grave':
         fields = ("name", "surname", "title", "full_name_with_title", "date_of_birth", 
             "date_of_death", "cementary_id", "gps_lon", "gps_lat")
-        
-        return api_update_helper('grave', request.json, fields)
+        result = api_update_helper('grave', request.json, fields)
+        if 'description' in request.json:
+            long_text = request.json['description']
+            path = os.path.join(current_app.instance_path, '/res/osoba/' + data['id'] + ".html")
+            with open(path, 'w') as fi:
+                fi.write(long_text)
     elif param == 'user':
         fields = ("username", "email", "password_hash", "admin_permit", "activated")
-        return api_update_helper('user', request.json, fields)
-
+        result = api_update_helper('user', request.json, fields)
     elif param == 'cementary':
         fields = ("full_name", "full_address", "city")
-        return api_update_helper('cementary', request.json, fields)
+        result = api_update_helper('cementary', request.json, fields)
+    else:
+        print("Bad Request :: {} => {!r}".format(param, request.json))
+        result = { 'status_msg' : 'incorrect param specified', 'param' : param }
+    return jsonify(result)
 
+@bp.route('/api/remove/<string:param>')
+def remove(param):
+    if request.json == None:
+        return jsonify({'status_msg' : "AJAX problem -- json not visible for server"})
+    
+    target = request.json.get('id', None)
+    
+    if target == None:
+        return jsonify({'status_msg' : "key(id) not specified"})
+    
+    def helper(target, id):
+        db = get_db()
+        db.execute('DELETE FROM {} WHERE id=?'.format(target), (id,))
+        db.commit()
+    
+    if param == 'grave':
+        helper('grave', target)
+        result = {"status_msg" : "ok"}
+    elif param == 'user':
+        helper('user', target)
+        result = {"status_msg" : "ok"}
+    elif param == 'cementary':
+        helper('cementary', target)
+        result = {"status_msg" : "ok"}
     else:
         print("Bad Request :: {!r}".format(data))
-        return { 'status_msg' : 'incorrect param specified', 'param' : param }
+        result = { 'status_msg' : 'incorrect param specified', 'param' : param }
+    return jsonify(result)
 
