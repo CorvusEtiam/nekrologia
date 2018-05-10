@@ -37,8 +37,5 @@ def root():
     else:
         city = None 
     data = get_graves_from_city(city)
-    logger = log.getLogger('nekrologia')
-    logger.info("City: {}".format(city))
-    logger.info("Graves: {}".format(data))
     
-    return render_template("frontend/index.html", graves = data)
+    return render_template("frontend/index.html", graves = data, city = city)

@@ -1,0 +1,180 @@
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+}
+
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #eee;
+    display: flex;
+    flex-direction: column;
+}
+
+.header__container {
+    width: 100%;
+    display: none;
+    height: 3em;
+    background-color: darkgreen;
+}
+
+
+.container__content {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+}
+
+.left__container {
+    height: 100%;
+    width: 10em;
+    background-color: darkgreen;
+}
+
+.map__container {
+    flex: 1;
+    background: yellow;
+}
+
+.cornermenu__container,
+.cornermenu__button {
+    font-size: 16pt;
+    background: darkgreen;
+    color: white;
+}
+
+.menu {
+    position: relative;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.menu__text {
+    background: forestgreen;
+    color: white;
+}
+
+@media screen and (min-width: 760px) {
+
+    .cornermenu__menu {
+        display: none;
+    }
+
+    .cornermenu__container {
+        z-index: 999;
+        position: fixed;
+        right: 0;
+        top: 0;
+        cursor: pointer;
+    }
+
+
+    .cornermenu__button {
+        width: 120px;
+        height: 2.5em;
+        border: 0;
+        padding: 15px;
+        font-size: 16pt;
+    }
+
+    .cornermenu__button:hover {
+        background: forestgreen;
+    }
+
+    .menu:not(.active) {
+        display: none;
+    }
+
+    .menu {
+        background: forestgreen;
+        z-index: 999;
+    }
+
+    .menu__item, .menu_text {
+        left: 50px;
+        top: 100px;
+        display: block;
+        height: 2.5em;
+        font-size: 16pt;
+        padding: 15px;
+    }
+
+    .menu__item:hover {
+        background: darkgreen;
+    }
+}
+
+@media screen and (max-width: 759px) {
+    .cornermenu__container {
+        width: 100%;
+    }
+
+    .cornermenu__button {
+        display: none;
+    }
+    
+    .menu__item, .menu__text {
+        display: block;
+        float: left;
+        padding: 10px 20px 10px 20px;
+    }
+
+    .menu__item {
+        cursor: pointer;
+    }
+
+    .menu__item:hover {
+        background: forestgreen;
+    }
+}
+
+.person__list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.person__item {
+    background: rgb(19, 122, 19);
+    width: 100%;
+
+    font-size: 13pt;
+    cursor: pointer;
+}
+
+.person__item:hover {
+    background: forestgreen;
+}
+
+.person__data {
+    padding-top: 10px;
+    text-align: center;
+}
+
+.person__data--dates {
+    padding: 5px;
+    font-style: italic;
+}
+
+.person__buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+.person__buttons:not(.active) {
+    display: none;
+}
+
+.person__button {
+    flex: 1;
+    height: 2em;
+}

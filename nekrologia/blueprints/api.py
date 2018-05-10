@@ -1,5 +1,5 @@
 from .auth import login_required
-from flask import g, current_app, Blueprint, request, render_template, url_for, session, send_file, jsonify
+from flask import g, current_app, Blueprint, request, render_template, url_for, session, send_file, jsonify, Response
 from nekrologia.db import get_db 
 from nekrologia.cache import get_cache, get_cached_resource, update_cache
 from werkzeug.security import generate_password_hash
@@ -12,26 +12,23 @@ def person_descr(user_id):
     path = os.path.join(current_app.instance_path, '/res/osoba/{}.html'.format(user_id))
     if not os.path.exist(path):
         path = os.path.join(current_app.instance_path, '/res/osoba/error.html')
-    return send_file(path)
+    with open(path, 'r') as fi:
+        return Response(fi.read(), mimetype = "text/html")
     
 @bp.route('/api/list/<string:tablename>', methods = ['POST'])
-def list_resource(tablename):
-    if tablename not in ('users', 'graves', 'cementaries'):
+def list_resource(tablename, id):
+    if tablename not in ('user', 'grave', 'cementary'):
         return jsonify({'status_msg' : 'Unkown resource %s' % (tablename, )})
     res = get_db().execute('SELECT * FROM ?', (tablename, )).fetchall()
     return jsonify({ row['id'] : dict(row) for row in users })
  
-@bp.route('/api/show/<string:tablename>', methods = ['POST']):
+@bp.route('/api/show/<string:tablename>/<int:uid>', methods = ['GET']):
 def show(tablename):
     if request.method == 'POST':
-        res_id = request.values.get('id')
-        if res_id == None:
-            return jsonify({'status_msg' : 'No' + tablename +  'specified'})
-        else:
-            if tablename not in ('grave', 'cementary', 'user'):
-                return jsonify({'status_msg' : 'Table: ' + tablename + " is unknown"})
-            data = get_db().execute('SELECT * FROM ? WHERE id = ?', (tablename, res_id)).fetchone()
-            return jsonify(dict(user))
+        if tablename not in ('grave', 'cementary', 'user'):
+            return jsonify({'status_msg' : 'Table: ' + tablename + " is unknown"})
+        data = get_db().execute('SELECT * FROM ? WHERE id = ?', (tablename, uid)).fetchone()
+        return jsonify(dict(user))
 
 def api_create_helper(target, fields, data):
     sql = "INSERT INTO {} {} VALUES {}".format(target, ', '.join(fields), ','.join(['?']*len(fields)))
@@ -121,7 +118,7 @@ def update(param):
         result = { 'status_msg' : 'incorrect param specified', 'param' : param }
     return jsonify(result)
 
-@bp.route('/api/remove/<string:param>')
+@bp.route('/api/remove/<string:param>', methods = ['POST'])
 def remove(param):
     if request.json == None:
         return jsonify({'status_msg' : "AJAX problem -- json not visible for server"})

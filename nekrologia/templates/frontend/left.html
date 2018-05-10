@@ -1,0 +1,21 @@
+<div id="left__content">
+        <ul class='person__list'>
+            {% for grave in grave %}
+            <li class='person__item' data-person-id="{{grave['id']}}" id="person_{{grave['id']}}">
+                <div class='person__item--wrap'>
+                    <div class='person__data'>
+                        <div class='person__data--name'>{{grave['full_name']}}</div>
+                        <div class='person__data--dates'>
+                            <span class='person__data--birth'>{{grave['date_of_birth']}}</span> -
+                            <span class='person__data--death'>{{ grave['date_of_death']}}</span>
+                        </div>
+                    </div>
+                    <div class="person__buttons">
+                        <button class='person__button' data-target='map'>Mapa</button>
+                        <button class='person__button' data-target='descr'>Opis</button>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>

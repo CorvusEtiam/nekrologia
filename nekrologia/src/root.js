@@ -31,14 +31,6 @@ widok:
 
 var MONTHS = ['stycznia', 'lutego', 'marca', 'kwietnia', 'maja', 'czerwca', 'lipca', 'sierpnia', 'września', 'października', 'listopada', 'grudnia']
 
-
-/*
-START -> <Lista osób>
-LIST_SELECT -> [MAPA], [OPIS]
-MAPA -> [LIST_SELECT],[OPIS]
-OPIS -> [MAPA],[LIST_SELECT]
-*/
-
 function Person(data) {
     this.id = data.id;
     this.name = data.imie;
@@ -76,62 +68,12 @@ Person.prototype.show_description = function () {
     $('#of-birth').text(prettify_date(this.birth_day));
     $('#of-death').text(prettify_date(this.death_day));
 }
-
-Person.prototype.fullname = function (with_title) {
-    if (with_title) { return this.title } else { return this.name + " " + this.surname; }
-}
-
-Person.prototype.fulldate = function () {
-    return this.birth_day + "  -  " + this.death_day
-}
 /*
 <div class="person-menu">
         <button id='b-map'>Mapa</button>
         <button id='b-descr'>Opis</button>
     </div>
 */
-
-Person.prototype.add_to_sidebar = function () {
-    var template = `
-    <li class='person-list__item' data-person-id='$id'>
-    <div class='person-wrapper'>
-        <div class='name'>$name</div>
-        <div class='dates'><span>$date_b</span> - <span>$date_d</span></div>
-    </div>
-    </li>`
-    var t = template.replace('$name', this.fullname(false))
-        .replace('$date_b', this.birth_day)
-        .replace('$date_d', this.death_day)
-        .replace('$id', this.id);
-    var list_node = $(t);
-
-    list_node.find('.person-wrapper').on('click', function (ev) {
-        STATE.currently_selected = this.id;
-        $('li.person-list__item.active').removeClass('active');
-        $("li[data-person-id=" + this.id + "]").toggleClass('active');
-        $('#my-nav-descr').removeClass('hidden');
-
-        var mode = STATE.current_mode();
-        if (mode === 'desktop' || mode === 'tablet') {
-            this.center_map();
-            this.show_description();
-            rightSidebar.show();
-        } else {
-            $('#left-sidebar').addClass('hidden');
-            this.show_description();
-            rightSidebar.show();
-            $('#my-nav-list').removeClass('active');
-            $('#my-nav-descr').addClass('active');
-            // show description 
-            // show links to list, map in header
-            // hide left sidebar 
-        }
-    }.bind(this));
-
-
-    $('#person-list__wrapper').append(list_node);
-}
-
 Person.prototype.add_to_map = function () {
     this.marker = L.marker(this.coords);
     var popup_content = [
@@ -184,35 +126,23 @@ function init_map() {
 
 
 function download_peoples() {
-    $.getJSON('/res/ludzie.json', function (data) {
-        if (data.osoby === undefined) {
-            console.error('Brak zapisanych osób -- problem z serwerem')
-            return;
+    $.POST('api/list/grave', function (data) {
+        for (var id in data) {
+            var osoba = data[id];
+            window.PEOPLES[id] = new Person(osoba);
+            window.PEOPLES[id].add_to_map();
         }
-        for (var i = 0; i < data.osoby.length; i++) {
-            var osoba = data.osoby[i];
-            window.PEOPLES[osoba.id] = new Person(osoba);
-            window.PEOPLES[osoba.id].add_to_sidebar();
-            window.PEOPLES[osoba.id].add_to_map();
-        }
-
     });
 }
 
-function header_init() {
-    $('#my-nav-list>a').on('click', function () {
-
-    })
-}
-
 function load_person(id) {
-    $.get("/osoba?id=" + id,
+    $.post('/api/person/' + id,
         function (data) { window.PEOPLES[id].html = data; $('#person-descr').html(data) })
 
 }
 
 function load_cementaries() {
-    $.getJSON('/res/cmentarze.json', function (json) {
+    $.post('/api/list/cementary', function (json) {
         window.CEMENTARY = json;
     })
 }
@@ -230,6 +160,7 @@ window.onload = function main() {
     download_peoples();
     load_cementaries();
     window.IS_MOBILE = is_mobile();
+/*
     $('#my-nav-list').on('click', function (ev) {
         $('li.active').removeClass('active');
         $(this).addClass('active');
@@ -268,6 +199,7 @@ window.onload = function main() {
         $('.person-wrapper').removeClass('hidden');
         searchBar(this.value); 
     })   
+*/
 }
 
 

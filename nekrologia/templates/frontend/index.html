@@ -3,179 +3,89 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" type="text/css" href="styles/L.Control.Sidebar.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-        crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=EB+Garamond|Forum" rel="stylesheet">
-    <link rel="stylesheet" href="styles/root.css?v=1.52" type="text/css" />
-    <script src="src/external/jquery-3.2.1.js"></script>
-    <script>
-    /* init-modal */
-    $(window).on("load", function() {
-        $('#info-modal').modal('show');  
-        $('#my-nav-about a').on('click', function() {
-            $('#info-modal').modal('show');
-        })
-    })
-
-    </script>
+    <link rel="stylesheet" href="styles/index.css" />
     <title>Nekrologia</title>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top" id='my-nav'>
-        <div class="navbar-header">
-            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".js-navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+    <div class='container'>
+        <nav class='cornermenu__container'>
+            <button class='cornermenu__button button__toggle' data-target='TopMenu'>
+                Menu
             </button>
-            <a class="navbar-brand" href="#">Nekrologia</a>
-        </div>
-        <div class="collapse navbar-collapse js-navbar-collapse">
-            <ul class="navbar navbar-nav">
-                <li><a href="#" data-link-id="about-page">O stronie</a></li>
-                <li><a href="#" data-link-id="cementary-list">Cmentarze</a></li>
-                <li><a href="#" data-link-id="search-bar">O stronie</a></li>
-            </ul>
-        </div>
-        <div class="container-fluid">
-            <ul class="nav navbar-nav">
-                <li id='my-submenu-extended'>
-                    <a href="#">
-                        <span class='caret'></span>
-                    </a>
-                    <ul>
-                        <li id='my-search'><a href="#">Cmentarze</a></li>   
-                        <li id='cmentarze'><a href="#">Wyszukaj</a></li>   
-                        <li id='about-page'><a href="#">O stronie</a></li>   
-                        
-                    </ul>
+            <ul id='TopMenu' class='menu'>
+                <li class="menu__text">
+                    {{ city }}
                 </li>
-                <li id='my-nav-list' class='active'><a href="#">Lista osób</a></li>
-                <li id='my-nav-map'><a href="#">Mapa</a></li>   
-                <li id='my-nav-descr' class='hidden'><a href="#">Opis</a></li>   
-                <li id='my-nav-about'><a href="#">O stronie</a></li>   
+                <li class='menu__item button__toggle' data-target='aboutPopup'>
+                    O stronie
+                </li>
+                <!-- 
+                <li class='menu__item' data-target='map'>
+                    Mapa
+                </li>
+                <li class='menu__item' data-target='personList'>
+                    Lista osób
+                </li>
+                <li class='menu__item' data-target='personDescription'>
+                    Lista osób
+                </li>
+                -->
             </ul>
-        </div>
-    </nav>
-    <div id="container" data-state='0'>
-        <div id='left-sidebar' class='full-height-column'>
-            <div id="left-sidebar__wrapper">
-                <div class='hidden' id='person-search-bar__container'>
-                    <div class='input-group'>
-                        <input type="text" name="searchbar" id="person-search-bar">
-                        <label for="searchbar">Wyszukaj osobę</label>
-                        <span class='caret'></span>
-                    </div>
-                    <div class="input-group" id="expand">
-                        <input name='cementary-search' id='cementary-search' placeholder='Cmentarz'>
-                        <label for="cementary-search">Wyszukaj cmentarz</label>
-                    </div>
-                </div>
-                <div id="left-sidebar__content">
-                    <ul id='person-list__wrapper'>
-                        {% for grave in graves %}
-                        <li class='person-list__item' data-person-id="{{grave['id']}}">
-                            <div class='person-wrapper'>
-                                <div class='name'>{{grave['full_name_with_title']}}</div>
-                                <div class='dates'><span>{{grave['date_of_birth']}}</span> - <span>{{grave['date_of_death']}}</span></div>
-                            </div>
-                        </li>
-                        {% endfor %}
-                            <!-- 
-                            <li class='person-list__item' data-person-id="">
-                                <div class='person-wrapper'>
-                                    <div class='name'>Imię Nazwisko</div>
-                                    <div class='dates'>Data Urodzenia</div>
-                                </div>
-                                <div class="person-menu">
-                                    <button id='b_map'>Mapa</button>
-                                    <button id='b_descr'>Opis</button>
-                                </div>
-                            </li>
-                            -->
-                    </ul>
-                </div>
+            <!-- menu-button -->
+            <!-- lista zakładek -->
+        </nav>
+        <div class='container__content'>
+            <div class='left__container'>
+                {% include "left.html" %}
             </div>
-            <div class='hidden' id='cementary-list'>
-                <div id='cementary-list__header'></div>
-                <div id='cementary-list__inner'>
+            <div class='map__container' id='map'></div>
+            <div id='RightSidebar' class='right__container'>
+                <nav class='right__menu'>
+                    <section id="navigate"><a href="#" id='navigateToMap'>Nawiguj</section>
+                    <section id="zoom">Mapa</section>
+                </nav>
+                <h1 id="fullName"></h1>
+                <table id='rs__table'>
+                    <tr>
+                        <td class='rs__key'>Cmentarz: </td>
+                        <td class='rs__val' id='cementaryName'></td>
+                    </tr>
+                    <tr>
+                        <td class='rs__key'>Data urodzenia: </td>
+                        <td class='rs__val' id='dateOfBirth'></td> 
+                    </tr>
+                    <tr>
+                        <td class='rs__key'>Data śmierci: </td>
+                        <td class='rs__val' id='dateOfDeath'></td> 
+                    </tr>
+                    <tr>
+                        <td class='rs__key'>Miasto pochówku: </td>
+                        <td class='rs__value' id='city'></td> 
+                    </tr>
+                </table>
+                <div class='personDescription'>        
                 </div>
             </div>
         </div>
-        <div id="map"></div>
+        <script src="src/index.js"></script>
+        <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+        <script src="src/external/L.Control.Sidebar.js"></script>
+
     </div>
-    <div id='right-sidebar'>
-        <section class='container-fluid'>
-        <ul>
-            <li><a id='show-on-google' href="#">Pokaż na mapach Google</a></li>
-            <li><a id='close-descr' href="#" onclick="rightSidebar.hide();">Zamknij opis</a></li>
-    <!--                <li><a id='print-plan' href="#">Drukuj plan cmentarza</a></li> -->
-        </ul>
-    </section>
-    <section class="sidebar-content">
-        <section id="name"></section>
-        <section class="panel-group">
-            <div class="panel panel-default">
-              <div class='panel-heading'>Data urodzenia</div>  
-              <div id="of-birth" class="panel-body"></div>
+    <div class="popup__container" id="aboutPopup">
+        <header class="popup__header"></header>
+        <div class="popup__content">
+            <header class='popup__tabs tab__bar'></header>
+            <div class='tab__container'>
+                <div class="tab__item"></div>
+                <div class="tab__item"></div>
             </div>
-            <div class="panel panel-default">
-                <div class='panel-heading'>Data śmierci</div>      
-                <div id='of-death' class="panel-body"></div>
-            </div>
-        </section>
-        <section id="person-descr">
-        </section>
-    </section>
-    </div>
-    <div id="info-modal" class="modal fade" tabindex='-1' role='dialog'>
-		<div class='modal-dialog' role='document'>
-            <div class='modal-content'>
-                    <section class='modal-header'>
-            <ul class="nav nav-tabs">
-                    <li class="active"><a href="#o_stronie" data-toggle="tab">O stronie</a></li>
-                    <li><a href="#o_autorach" data-toggle="tab">O autorach</a></li>
-            </ul>
-                    <section class="modal-body">
-                        <div class='tab-content'>
-                            <div id="o_stronie" class="tab-pane fade in active">
-                            </div>
-                            <div id="o_autorach" class="tab-pane fade active">
-                            </div>
-                    </div>			
-                    </section>
-                <section class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
-                </section>
-            </div> <!-- .model-content -->
-        </div> <!-- .model-dialog -->        
-    </div>
-        
-    <div id='show-info__container'>
-        <!-- Wyszukaj -->
-        <!-- Cmentarze -->
-        <!-- O stronie -->
-        <!-- W wersji mobilnej zwiń do pojedynczego przycisku po prawej stronie -->
-        <div class='container-fluid'>
-            <ul class="navbar nav">
-                <li></li>
-                <li></li>
-                <li></li>                
-            </ul>
         </div>
-        <button onclick="$('#info-modal').modal('show');">O stronie</button>
     </div>
-    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-    <script src="src/external/L.Control.Sidebar.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
-    <script src="src/root.js?v=1.1"></script>
 </body>
 
 </html>
