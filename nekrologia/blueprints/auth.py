@@ -7,7 +7,7 @@ import wtforms.validators as v
 
 from nekrologia.db import get_db 
 
-bp = Blueprint('auth', __name__, url_prefix='/auth')
+bp = Blueprint('auth', __name__)
 
 class LoginForm(FlaskForm):
     username = TextField('Login', validators=[v.DataRequired()]) 

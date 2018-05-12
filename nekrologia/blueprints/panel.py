@@ -1,7 +1,9 @@
 from .auth import login_required
-from flask import g, current_app, Blueprint, request, render_template, url_for, session
-from nekrologia.db import get_db 
+from flask import g, current_app, Blueprint, request, render_template, url_for, session, Response
 
+from nekrologia.db import get_db 
+import os  
+from werkzeug.utils import secure_filename
 bp = Blueprint('panel', __name__)
 
 @bp.route('/panel')
@@ -12,3 +14,28 @@ def panel():
     
     return render_template("panel/panel.html", users = users, cementaries = cementaries)
 
+ALLOWED = ('.jpeg','.jpg', '.png', 'gif')
+def allowed_file(filename):
+    return os.path.splitext(filename)[1].lower() in ALLOWED 
+
+import re 
+def correct_filename(filename):
+    return re.match(r"^[A-Za-z0-9_]*\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$", filename) is not None 
+
+@bp.route('/panel/upload', methods = ['GET', 'POST'])
+def upload_image():
+    if request.method == 'POST':
+        print(dict(request.files))
+        if 'file' not in request.files:
+            
+            return Response("Błąd z wysłaniem pliku. Prosimy o kontakt  <a href='/panel'>Powrót</a>", status = 500)
+        file = request.files['file']
+        
+        if file.filename == '':    
+            return Response("Pusta nazwa pliku, nie został wysłany. Prosimy o kontakt <a href='/panel'>Powrót</a>", status = 500)
+
+        if file and correct_filename(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+            return Response("Wysłano  <a href='/panel'>Powrót</a>", status = 200)
+        

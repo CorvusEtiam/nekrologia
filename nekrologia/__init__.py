@@ -64,4 +64,8 @@ def create_app(test_config=None):
     def send_images(path):
         return send_from_directory('images', path)
 
+    @app.route('/images/uploaded/<path:path>')
+    def send_uploaded_image(path):
+        return send_from_directory('images/upload', path)
+
     return app 

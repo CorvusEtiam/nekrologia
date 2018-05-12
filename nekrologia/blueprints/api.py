@@ -22,7 +22,7 @@ def list_resource(tablename, id):
     res = get_db().execute('SELECT * FROM ?', (tablename, )).fetchall()
     return jsonify({ row['id'] : dict(row) for row in users })
  
-@bp.route('/api/show/<string:tablename>/<int:uid>', methods = ['GET']):
+@bp.route('/api/show/<string:tablename>/<int:uid>', methods = ['GET'])
 def show(tablename):
     if request.method == 'POST':
         if tablename not in ('grave', 'cementary', 'user'):
@@ -51,8 +51,7 @@ def create(tablename):
         return jsonify({'status_msg' : "AJAX problem -- json not visible for server"})
     
     if tablename == 'grave':
-        fields = ("name", "surname", "title", "full_name_with_title", "date_of_birth", "date_of_death", "cementary_id", "gps_lon", "gps_lat")
-        result = api_create_helper("grave", fields, request.json)
+        panresult = api_create_helper("grave", fields, request.json)
         if result is not None:
             return jsonify(result)
         long_text = request.json['description']
@@ -88,7 +87,7 @@ def api_update_helper(target, data, fields):
     db.commit()
     return {"status_msg" : "ok"} 
 
-@bp.route('/api/update/<string:param>', methods = ['POST']):
+@bp.route('/api/update/<string:param>', methods = ['POST'])
 def update(param):
     if request.json == None:
         return jsonify({'status_msg' : "AJAX problem -- json not visible for server"})
@@ -147,3 +146,10 @@ def remove(param):
         result = { 'status_msg' : 'incorrect param specified', 'param' : param }
     return jsonify(result)
 
+
+@bp.route('/api/image', methods = ['GET'])
+def get_real_image_href():
+    if request.method == 'GET':
+        userid = request.args.get('userid')
+        result = get_db().select('SELECT img_path FROM image WHERE userid = ?', (userid, )).fetchone()
+        return 

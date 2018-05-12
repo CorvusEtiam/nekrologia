@@ -1,13 +1,13 @@
 {% extends "auth/base.html" %}
 {% block title %}Rejestracja{% endblock %}
 {% block content %}
-<form method='POST' role='form' class='login__submit'>
+<form method='POST' role='form' class='login'>
     {{ form.csrf_token }}
     {% if error != None %}
     <h2>{{error}}</h2>
     {% endif %}
     {% if form.errors %}
-    <p class='form__group--error'>
+    <p class='login__group--error'>
         {% for error in form.username.errors %}
         <span class='error'>{{ error }}</span>
         {% endfor %}
@@ -34,7 +34,7 @@
     {{ form.confirm.label(class='login__label') }}    
     {{ form.confirm(class='login__input') }}
     <div class="login__group">
-        <button class='login__submit' type="submit">Zarejestruj</button>
+        <button class='panel__button' type="submit">Zarejestruj</button>
     </div>
 </form>
 {% endblock %}

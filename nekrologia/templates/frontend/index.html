@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,7 +44,8 @@
             <div class='map__container' id='map'></div>
             <div id='RightSidebar' class='right__container'>
                 <nav class='right__menu'>
-                    <section id="navigate"><a href="#" id='navigateToMap'>Nawiguj</section>
+                    <section id="navigate">
+                        <a href="#" id='navigateToMap'>Nawiguj</section>
                     <section id="zoom">Mapa</section>
                 </nav>
                 <h1 id="fullName"></h1>
@@ -56,36 +56,25 @@
                     </tr>
                     <tr>
                         <td class='rs__key'>Data urodzenia: </td>
-                        <td class='rs__val' id='dateOfBirth'></td> 
+                        <td class='rs__val' id='dateOfBirth'></td>
                     </tr>
                     <tr>
                         <td class='rs__key'>Data śmierci: </td>
-                        <td class='rs__val' id='dateOfDeath'></td> 
+                        <td class='rs__val' id='dateOfDeath'></td>
                     </tr>
                     <tr>
                         <td class='rs__key'>Miasto pochówku: </td>
-                        <td class='rs__value' id='city'></td> 
+                        <td class='rs__value' id='city'></td>
                     </tr>
                 </table>
-                <div class='personDescription'>        
+                <div class='personDescription'>
                 </div>
             </div>
         </div>
-        <script src="src/index.js"></script>
-        <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-        <script src="src/external/L.Control.Sidebar.js"></script>
-
+        
     </div>
-    <div class="popup__container" id="aboutPopup">
-        <header class="popup__header"></header>
-        <div class="popup__content">
-            <header class='popup__tabs tab__bar'></header>
-            <div class='tab__container'>
-                <div class="tab__item"></div>
-                <div class="tab__item"></div>
-            </div>
-        </div>
-    </div>
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="src/external/L.Control.Sidebar.js"></script>
+    <script src="src/index.js"></script>
 </body>
-
 </html>

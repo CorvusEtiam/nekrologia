@@ -34,9 +34,20 @@ body, html {
 
 .left__container {
     height: 100%;
-    width: 10em;
     background-color: darkgreen;
 }
+@media screen and (mix-width: 760px) {
+    .left__container {
+        width: 10em;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .left__container {
+        width: 100%;
+    }
+}
+
 
 .map__container {
     flex: 1;

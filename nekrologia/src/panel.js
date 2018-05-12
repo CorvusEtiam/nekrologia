@@ -57,9 +57,7 @@ var MODALS = (function() {
                 $('#modal').toggle();
             })
             $('#modalRemUser_BtnDelete').on('click', function(ev) {
-                $.post('api/internal', {
-                    action : "delete",
-                    param: "users",
+                $.post('api/remove/user', {
                     id: user_id 
                 }).done(function(data) {
                     console.log(data);
@@ -100,7 +98,7 @@ window.onload = function() {
             var choice = confirm("Czy uzupełniłeś również opis i chcesz przesłać dane?");
             if (choice) {
                 data['description'] = localStorage.getItem('grave_description');
-                $.post('api/internal', {
+                $.post('api/create/grave', {
                     data: JSON.stringify(data),
                     dataType: "json"
                     /* TODO Uzupełnij jquery post */ 
@@ -112,15 +110,13 @@ window.onload = function() {
             }
         }
     })
-
+///
     document.getElementById('cementaryPanelSaveButton').addEventListener('click', function(ev) {
         var form_data = {};
         document.querySelectorAll('#cementaryNewForm > input').forEach(function(el) {
             form_data[el.getAttribute('name')] = el.value();    
         })
-        form_data['action'] = 'create'
-        form_data['param'] = 'cementary'
-        $.post('api/internal', form_data, function(res) {
+        $.post('api/create/cementary', form_data, function(res) {
             if ( res !== undefined && res['status_msg'] !== undefined ) {
                 if (res.status_msg == 'ok') {
                     alert('Cmentarz został dodany do listy');
@@ -130,10 +126,59 @@ window.onload = function() {
             }
         });
     })
+
+    $('#sendImage').addEventListener('submit', function() {
+        var fi = $('#upload')[0].files[0];
+        if (fi !== undefined ) {
+            $('#sendedImages').append("<li>" + fi.name + "</li");
+        }
+    })
 };
 
 (function() {
-    this.Editor = {};
+    /**
+     * @param options -- it takes `input`, `output` element id 
+     */
+    
+    var TAB = 9;
+    var customRenderer = marked.Renderer();
+    customRenderer.image = function(href, title, text) {
+        return "<img class='md__align--right' src='res/image/" + href + "' alt='" + title + "'>"
+    }
+
+    function Editor(options) {
+        this.inp = document.getElementById(options.input);
+        this.out = document.getElementById(options.output);
+        this.run_preview = document.getElementById(options.preview);
+        this.inp.addEventListener('keydown', function(ev) {
+            var start;
+            if ( ev.keyCode == TAB || ev.which == TAB ) {
+                ev.preventDefault();
+                start = this.selectionStart;
+                this.value = this.value.substring(0, this.selectionStart) + "\t" + this.value.substring(this.selectionEnd);
+                this.selectionEnd = start + 1; 
+            }
+        })
+
+        this.run_preview.addEventListener('click', function(ev) {
+            this.out.innerHTML = this.preview();
+        }.bind(this))
+    }
+
+    Editor.prototype.transform_img = function(parsed) {
+    }
+
+    Editor.prototype.preview = function() {
+        var parsed = this.reader.parse(this.inp.value);
+        parsed = this.transform_img(parsed);
+
+    }
+
+
+    this.Editor = Editor;
+
+    /*
+    */
     this.Editor.init = function() {
 
     }

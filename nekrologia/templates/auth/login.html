@@ -4,7 +4,7 @@
 <form class="login" method="POST" role="form">
     {{ form.csrf_token }}
     {% if error != None %}
-    <p class='form__group--error'>
+    <p class='login__group--error'>
         <h2>{{ error }}</h2>
         {% for error in form.username.errors %}
         <span class='error'>{{ error }}</span>
