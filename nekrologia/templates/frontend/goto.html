@@ -9,17 +9,16 @@
 </head>
 <body>
     <main class='container'>
-        <header class="container__header"></header>
+        <header class="container__header">Nekrologia Profesorów Uczelni Leśnych</header>
         <div class='container__content'>
-            <header>Wybierz miasto z którego profesorów chcesz wyszukać: </header>
+            <header class="panel__header">Wybierz miasto z którego profesorów chcesz wyszukać: </header>
             <div class="panel__container">
-                {% for city in cities %}
                 <div class='panel__tile'>
-                    <a class="panel__link" href='index?city={{ quote(city) }}'>
-                        <p class="panel__text">{{city}}</p>
+                    <a href='index?city={{ quote("Poznań") }}' class='panel__link'>
+                        <img src="images/up_poz.png" title="Poznań" width="160" />
+                        <span>Poznań</span>
                     </a>
                 </div>
-                {% endfor %}
             </div>
         </div>
         <footer class="container__footer"></footer>

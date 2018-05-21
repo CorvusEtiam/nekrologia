@@ -4,7 +4,7 @@ from requests.utils import unquote
 import logging as log 
 bp = Blueprint("frontend", __name__)
 
-@bp.route('/goto')
+@bp.route('/')
 def goto_route():
     cities = get_db().execute("SELECT city FROM cementary").fetchall()
     city_list = [ row['city'] for row in cities ]

@@ -1,4 +1,3 @@
-var m = marked.Parser();
 
 function sidebar() {
     var items = document.getElementsByClassName('sidebar__item');
@@ -21,26 +20,42 @@ function sidebar() {
 
 function saveMetadata() {
     var stored = {}
-    document.querySelectorAll('#metadataForm > input[name]').forEach(function(input) {
+    document.querySelectorAll('#metadataForm input[name]').forEach(function(input) {
         stored[input.name] = input.value;
     })
+    
+    stored['cementary_id'] = document.querySelector('select[name="cementary_id"').value
 
-    $.post('/api/create/grave', stored, function(res) {
-        $('#currentGrave').value = res.id;     
-    });
+    $.ajax({
+        type: "POST",
+        url: '/api/create/grave',
+        success: function(res) {
+            alert(res.status_msg);
+            $('#currentGrave').value = res.id;     
+        },
+        data: JSON.stringify(stored),
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8'
+    })
 }
 
 function saveDescription() {
-    var id = document.getElementById('currentGrave').value;
     var stored = {}
+    stored.id = document.querySelector('select[name="grave_id"]').value;
     editor.preview();
     
     stored['description'] = document.getElementById('editorPreview').innerHTML; 
-    stored['id'] = id
-
-    $.post("/api/create/description", stored, function(res) {
-            $('currentGrave').value = res.id;
-    });
+    console.log(stored)    
+    $.ajax({
+        type: "POST",
+        url: '/api/create/description',
+        success: function(res) {
+            alert(res.status_msg);
+        },
+        data: JSON.stringify(stored),
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8'
+    })
 }
 
 
@@ -121,6 +136,13 @@ window.onload = function() {
         ev.preventDefault();
         saveMetadata();
     })
+
+    $('#sendDescription').on('click', function(ev) {
+        ev.preventDefault();
+        saveDescription();
+    })
+
+    
 
     $('#sendImage').on('click', function() {
         var fi = $('#upload').files[0];

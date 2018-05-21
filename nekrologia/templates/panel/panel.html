@@ -158,6 +158,13 @@
             <!-- section#metadataPanel -->
             <section class="panel__item" id="editorPanel">
                 <section class="panel__inside editor">
+                    <section class='editor__bar'>
+                        <select name="grave_id">
+                            {% for grave in graves %} 
+                            <option value="{{grave['id']}}">{{grave['full_name_with_title']}}</option>
+                            {% endfor %}
+                        </select>
+                    </section>
                     <section class="editor__content">
                         <section class="editor__input" contenteditable="true">
                             <textarea class='editor__input--textarea' id='editorInput'></textarea>
@@ -166,6 +173,8 @@
                     </section>
                     <section class="editor__bar">
                         <button id='refreshButton'>Odśwież</button>
+                        <button id='sendDescription'>Zapisz</button>
+                        
                     </section>
                 </section>
             </section>
@@ -239,9 +248,11 @@
     <!-- content -->
     <!-- -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="src/panel.js?version=1.2"></script>
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+    <script src="src/panel.js?version=1.3"></script>
 </body>
 
 </html>
