@@ -28,7 +28,7 @@ def show(tablename):
         if tablename not in ('grave', 'cementary', 'user'):
             return jsonify({'status_msg' : 'Table: ' + tablename + " is unknown"})
         data = get_db().execute('SELECT * FROM ? WHERE id = ?', (tablename, uid)).fetchone()
-        return jsonify(dict(user))
+        return jsonify(dict(data))
 
 def api_create_helper(target, fields, data):
     sql = "INSERT INTO {} {} VALUES {}".format(target, ', '.join(fields), ','.join(['?']*len(fields)))

@@ -10,7 +10,9 @@ function closeAll() {
     document.querySelectorAll('.sidebar__item').forEach(function(el) {
         el.classList.remove('active');
     });
- }
+}
+
+
 
 function init_sidebar() {
     document.querySelectorAll('.activity__toggle').forEach(function(el) {
@@ -24,7 +26,6 @@ function init_sidebar() {
 
     document.querySelectorAll('.sidebar__item').forEach(function(el) {
         var target_id = el.getAttribute('data-target');
-        console.log("--> ", target_id);
         el.addEventListener('click', function(ev) {
             closeAll();
             document.getElementById(target_id).classList.add('active');
@@ -32,7 +33,7 @@ function init_sidebar() {
         });        
     })
 }
-
+/*
 var MODALS = (function() {
     function init_modal() {
         
@@ -83,7 +84,7 @@ function init_user_manager() {
     });
     
 }
-
+*/
 window.onload = function() {
     init_sidebar();
     document.getElementById('metadataPanelSaveButton').addEventListener('click', function(ev) {
@@ -110,7 +111,7 @@ window.onload = function() {
             }
         }
     })
-///
+
     document.getElementById('cementaryPanelSaveButton').addEventListener('click', function(ev) {
         var form_data = {};
         document.querySelectorAll('#cementaryNewForm > input').forEach(function(el) {
@@ -127,12 +128,23 @@ window.onload = function() {
         });
     })
 
-    $('#sendImage').addEventListener('submit', function() {
-        var fi = $('#upload')[0].files[0];
-        if (fi !== undefined ) {
-            $('#sendedImages').append("<li>" + fi.name + "</li");
-        }
-    })
+    $('#sendImage').on('click', function() {
+        var fi = $('#upload').files[0];
+        var formData = new FormData();
+        formData.append("picture", fi, fi.name)
+        $.ajax({
+            url : "/panel/upload", 
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType : false
+        });
+    });
+    this.editor = new Editor({
+        inp : 'editorInput',
+        out : 'editorPreview',
+        preview : 'refreshButton'
+    });
 };
 
 (function() {
@@ -141,14 +153,33 @@ window.onload = function() {
      */
     
     var TAB = 9;
-    var customRenderer = marked.Renderer();
-    customRenderer.image = function(href, title, text) {
-        return "<img class='md__align--right' src='res/image/" + href + "' alt='" + title + "'>"
-    }
 
     function Editor(options) {
-        this.inp = document.getElementById(options.input);
-        this.out = document.getElementById(options.output);
+        this.options = options;
+        this.inp = document.getElementById(options.inp);
+        this.out = document.getElementById(options.out);
+        /*
+        this.modal = new Modal({
+            {
+                content : 'ModalContent', 
+                open : 'ModalOpen', 
+                body : 'ModalBody' 
+            }
+        })
+        this.modal.body.innerHTML = 
+            "<label for='align_image'>Zmień położenie obrazu w poziomie</label>" +
+            "<select name='align_image'>" +
+                "<option value='center'>Centrum</option>" +
+                "<option value='left'>Lewo</option>" +
+                "<option value='right'>Prawo</option>" +
+            "</select>" +
+            "<button id='saveAlignment'>Zapisz</button>"
+
+        this.modal.body.getElementById('saveAlignment').addEventListener('click', function(ev) {
+            this.selected_image.classList.add(ev.target.value);
+        }.bind(this));
+
+    `   */
         this.run_preview = document.getElementById(options.preview);
         this.inp.addEventListener('keydown', function(ev) {
             var start;
@@ -161,25 +192,48 @@ window.onload = function() {
         })
 
         this.run_preview.addEventListener('click', function(ev) {
-            this.out.innerHTML = this.preview();
-        }.bind(this))
-    }
+            this.out.innerHTML = this.preview();   
+        }.bind(this));
 
-    Editor.prototype.transform_img = function(parsed) {
+        this.renderer = new marked.Renderer();
+        this.renderer.image = function(href, title, text) {
+            var new_href = "images/uploaded/" + href;
+            return '<img src="' + new_href + '" alt="' + text + '" />'
+        }
     }
 
     Editor.prototype.preview = function() {
-        var parsed = this.reader.parse(this.inp.value);
-        parsed = this.transform_img(parsed);
-
+        return marked(this.inp.value, {renderer: this.renderer});
     }
 
 
     this.Editor = Editor;
 
-    /*
-    */
-    this.Editor.init = function() {
-
-    }
 })();
+
+(function() {
+    function Modal(options) {
+        this.el = document.getElementById(options.content);
+        this.close = document.getElementById(options.close || 'ModalClose');
+        this.body = document.getElementById(options.body);
+
+        this.close.addEventListener('click', function(e) {
+            this.body.classList.remove('active');
+        }.bind(this))
+    }
+
+    Modal.prototype.open = function() {
+        this.body.classList.add('active');
+    }
+
+    this.Modal = Modal;
+})
+
+function load_grave(id) {
+    $.post("/api/show/grave/" + id, function(res) {
+        $(".panel__form > [name='*']").each(function(el) {
+            var name = el.getAttribute('name');
+            el.value = res[name];
+        })
+    })
+}

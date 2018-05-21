@@ -15,7 +15,7 @@ var PERSON, CEMENTARY, STATES;
     UIElem.prototype.hide = function() {}
     UIElem.prototype.toggle = function() {}
     
-    this.UI = UI;
+    this.UI = UIElem;
 
 })();
 
@@ -87,7 +87,7 @@ function init_map() {
         accessToken: access_token
     }).addTo(mymap);
     
-    rightSidebar = L.control.sidebar('RightSidebar', {
+    window.rightSidebar = L.control.sidebar('RightSidebar', {
         closeButton: false,
         position: "right"
     });
@@ -101,7 +101,7 @@ function init_map() {
 function init_toggle_buttons() {
     document.querySelectorAll('.button__toggle').forEach(function(el) {
         var target = el.getAttribute('data-target');
-        el.addEventListener(function(ev) {
+        el.addEventListener('click', function(ev) {
             document.getElementById(target).classList.toggle('active');
         })
     })
@@ -110,4 +110,10 @@ function init_toggle_buttons() {
 window.onload = function () {
     init_map();
     init_toggle_buttons();
+    document.querySelectorAll('.person__item').forEach(function(person) {
+        person.addEventListener('click', function() {
+            window.rightSidebar.toggle();
+            console.log("!")
+        });
+    })
 }

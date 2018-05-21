@@ -11,8 +11,8 @@ bp = Blueprint('panel', __name__)
 def panel():
     users = get_db().execute("SELECT * FROM user").fetchall()
     cementaries = get_db().execute("SELECT * FROM cementary").fetchall()
-    
-    return render_template("panel/panel.html", users = users, cementaries = cementaries)
+    graves = get_db().execute('SELECT * FROM grave').fetchall()
+    return render_template("panel/panel.html", users = users, cementaries = cementaries, images = os.listdir(current_app.config['UPLOAD_FOLDER']), graves = graves)
 
 ALLOWED = ('.jpeg','.jpg', '.png', 'gif')
 def allowed_file(filename):
