@@ -61,6 +61,12 @@ def create(tablename):
     elif tablename == 'user':
         fields = ("username", "email", "password_hash", "admin_permit", "activated")
         return jsonify(api_create_helper('users', fields, request.json))
+    elif tablename == 'description':
+        id = request.json['id']
+        data = request.json['description']
+        with open("./res/upload/{}.html".format(id), 'w') as fi:
+            fi.write(data)
+        return jsonify({'status_msg' : 'ok', 'id': id})    
     else:
         return jsonify({ "status_msg" : "Unkown resource " + tablename})
 
