@@ -39,32 +39,28 @@ def api_create_helper(target, fields, data):
                 placeholders.append(generate_password_hash(data['password']))
             placeholders.append(data[key])
     except KeyError as ke:
-        return jsonify({'status_msg' : 'Missing field :: ' + ke.message})
+        return {'status_msg' : 'Missing field :: ' + ke.message}
 
     db = get_db()
     db.execute(sql, placeholders)
     db.commit() 
+    
+    user = db.execute('SELECT id FROM ? WHERE name=? AND surname=?', (target, data['name'], data['surname'])).fetchone()  
+    return {'status_msg' : 'ok', 'id' : user['id'] }
 
 @bp.route('/api/create/<string:tablename>', methods = ['POST'])
 def create(tablename):
     if request.json == None:
         return jsonify({'status_msg' : "AJAX problem -- json not visible for server"})
-    
     if tablename == 'grave':
-        panresult = api_create_helper("grave", fields, request.json)
-        if result is not None:
-            return jsonify(result)
-        long_text = request.json['description']
-        path = os.path.join(current_app.instance_path, '/res/osoba/' + data['id'] + ".html")
-        with open(path, 'w') as fi:
-            fi.write(long_text)
-        return jsonify({"status_msg" : "ok"})
+        result = api_create_helper("grave", fields, request.json)
+        return jsonify(result)
     elif tablename == 'cementary':
         fields = ("full_name", "full_address", "city")
-        return api_create_helper("cementary", fields, request.json)
+        return jsonify(api_create_helper("cementary", fields, request.json))
     elif tablename == 'user':
         fields = ("username", "email", "password_hash", "admin_permit", "activated")
-        return api_create_helper('users', fields, request.json)
+        return jsonify(api_create_helper('users', fields, request.json))
     else:
         return jsonify({ "status_msg" : "Unkown resource " + tablename})
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="styles/panel.css" type="text/css" />
     <title>Panel sterowania</title>
 </head>
-
 <body>
     <main class='container'>
         <aside class='sidebar'>
@@ -17,7 +16,7 @@
                     <span class='sidebar__group--name'>Administracja</span>
                 </section>
                 <section class='sidebar__group--content' id='adminSidebarGroup'>
-                    <section class='sidebar__item' id='metadataOpenner' data-target='adminUserPanel'>Użytkownicy</section>
+                    <section class='sidebar__item' id='adminPanelOpenner' data-target='adminUserPanel'>Użytkownicy</section>
                 </section>
 
             </section>
@@ -28,11 +27,10 @@
                 </section>
 
                 <section class='sidebar__group--content' id='sidebarGroup'>
-                    <section class='sidebar__item' id='metadataOpenner' data-target='metadataPanel'>Metadane</section>
-                    <section class='sidebar__item' id='editorOpenner' data-target='editorPanel'>Edytor</section>
-                    <section class="sidebar__item" id='uploadOpenner' data-target='imageUpload'>Wyślij obraz</section>
+                    <section class='sidebar__item' id='metadataOpenner' data-target='metadataPanel'>1. Metadane</section>
+                    <section class='sidebar__item' id='editorOpenner' data-target='editorPanel'>2. Edytor</section>
+                    <section class="sidebar__item" id='uploadOpenner' data-target='imageUpload'>3. Dodaj obrazy</section>
                     <section class='sidebar__item' id='imagesOpenner' data-target='images'>Obrazy</section>
-
                 </section>
             </section>
             <section class='sidebar__item' id='cementaryOpenner' data-target='cementaryPanel'>Dodaj cmentarz</section>
@@ -110,7 +108,8 @@
             </section>
             <section class='panel__item' id='metadataPanel'>
                 <section class="panel__inside">
-                    <form class='panel__form'>
+                    <form class='panel__form' id='metadataForm'>
+                        <input type="hidden" id='currentGrave'/>
                         <section class='form__group'>
                             <label for="name">Imię: </label>
                             <input type="text" name="name" id='metaName' />
@@ -131,7 +130,7 @@
                         </section>
                         <section class="form__group">
                             <label for="age">Wiek: </label>
-                            <input type="number" />
+                            <input type="number" name="age"/>
                         </section>
                         <section class="form__group">
                             <label for="cementary_id">Cmentarz</label>
@@ -149,10 +148,10 @@
                             <input name="gps_lat" class='form__input' required pattern="(-?\d{1,3}\.\d+)?" type="text" placeholder="GPS -- szer. w formacie xx.xxxxxx"
                             />
                         </section>
-
                         <section class='form__group'>
-                            <button class='panel__button--save' id='metadataPanelSaveButton'>Zapisz</button>
+                            <button id='sendMetadata' onclick='saveMetadata()'>Zapisz</button>
                         </section>
+
                     </form>
                 </section>
             </section>
@@ -198,6 +197,17 @@
                     </ul>
                 </section>
             </section>
+            <section class='panel__item' id='sendToServer'>
+                <section class="panel__inside viewer--send-to-server">
+                    <section class='viewer--metadata_view'>
+                        <ul id='metadataView'>
+                            
+                        </ul>
+                    </section>
+                    <section id='descriptionView'></section>
+                    <button>Zapisz na serwer</button>
+                </section>
+            </section>
             <section class='panel__item' id='cementaryPanel'>
                 <section class="panel__inside">
                     <form method='POST' id='cementaryNewForm' class='panel__form'>
@@ -231,7 +241,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
-    <script src="src/panel.js?version=1.1"></script>
+    <script src="src/panel.js?version=1.2"></script>
 </body>
 
 </html>
