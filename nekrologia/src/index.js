@@ -1,23 +1,9 @@
-var PERSON, CEMENTARY, STATES;
+var GRAVES, CEMENTARY;
 
-// MAP -> LIST | DESCRIPTION
-// LIST -> MAP | DESCRIPTION 
-// DESCRIPTION -> LIST | MAP 
-
-
-(function() {
-    function UIElem(id) {
-        this.id = id;
-        this.handle = document.getElementById(id);
-    }
-
-    UIElem.prototype.show = function() {}
-    UIElem.prototype.hide = function() {}
-    UIElem.prototype.toggle = function() {}
-    
-    this.UI = UIElem;
-
-})();
+/**
+ * @todo Add GPS tooltip with popup for all graves
+ * @todo Add description loader 
+ */
 
 function is_mobile() {
     var check = false;
@@ -67,7 +53,7 @@ function is_mobile() {
             this.load_description();
             var cementary; 
             document.getElementById('fullName').innerText = this.full_name_with_title;
-            document.getElementById('cementaryName').innerText = CEMENTARY[this.cementary_id]['full_name'];
+            document.getElementById('cementaryName').innerText = CEMENTARY[this.cementary_id].full_name;
             document.getElementById('dateOfBirth').innerText = this.date_of_birth;
             document.getElementById('dateOfDeath').innerText = this.date_of_death;
             document.getElementById('city').innerText = CEMENTARY[this.cementary_id]['city']
@@ -75,6 +61,8 @@ function is_mobile() {
             rightSidebar.show();
         }
     }
+
+    this.Person = Person;
 })();
 
 function init_map() {
@@ -98,22 +86,33 @@ function init_map() {
     rightSidebar.hide();
 }
 
-function init_toggle_buttons() {
-    document.querySelectorAll('.button__toggle').forEach(function(el) {
-        var target = el.getAttribute('data-target');
-        el.addEventListener('click', function(ev) {
-            document.getElementById(target).classList.toggle('active');
-        })
+function init_toggle_buttons() {}
+
+function sidebar() { }
+
+
+function get_data() {
+    $.getJSON('/api/list/grave', function(data) {
+        for ( let id in data ) {
+            GRAVES[id] = new Person(data[id]);
+        }
+    });
+
+    $.getJSON('/api/list/cementary', function(data) {
+        for ( let id in data ) {
+            CEMENTARY[id] = data[id];
+        }
     })
 }
 
 window.onload = function () {
     init_map();
+    get_data()
     init_toggle_buttons();
     document.querySelectorAll('.person__item').forEach(function(person) {
-        person.addEventListener('click', function() {
+        person.addEventListener('click', function(ev) {
             window.rightSidebar.toggle();
-            console.log("!")
+            GRAVES[person.getAttribute('data-person-id')].add_to_map();
         });
     })
 }

@@ -12,6 +12,8 @@ def goto_route():
 
 def get_graves_from_city(city=None):
     graves_in_city = """SELECT 
+        name,
+        surname,
         grave.id as id, 
         full_name_with_title, 
         date_of_birth, 
