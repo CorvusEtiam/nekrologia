@@ -1,6 +1,7 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-
+{% import './panel/metadata.html' as meta %}
+{% import './panel/editor.html' as editor %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -115,152 +116,24 @@
                 </section>
             </section>
             <section class='panel__item' id='metadataPanel'>
-                <section class="panel__inside">
-                    <form class='panel__form' id='metadataForm'>
-                        <input type="hidden" id='currentGrave'/>
-                        <section class='form__group'>
-                            <label for="name">Imię: </label>
-                            <input type="text" name="name" id='metaName' />
-                            <label for="surname">Nazwisko: </label>
-                            <input type="text" name="surname" id='metaSurname' />
-                            <label for="title">Tytuł naukowy: </label>
-                            <input type="text" name="title" id='metaTitle' placeholder='Tytuł naukowy' />
-                            <label for="title">Pełne imię i nazwisko wraz z tytułem naukowym: </label>
-                            <input type="text" name="full_name_with_title" id='metaTitle' />
-                        </section>
-                        <section class="form__group">
-                            <label for="date_of_birth">Data urodzenia</label>
-                            <input type="date" name="date_of_birth" id='metaBirthDate' />
-                        </section>
-                        <section class='form__group'>
-                            <label for="date_of_death">Data śmierci:</label>
-                            <input type="date" name="date_of_death" id='metaDeathDate' />
-                        </section>
-                        <section class="form__group">
-                            <label for="age">Wiek: </label>
-                            <input type="number" name="age"/>
-                        </section>
-                        <section class="form__group">
-                            <label for="cementary_id">Cmentarz</label>
-                            <select name="cementary_id">
-                                {% for cementary in cementaries %}
-                                <option value="{{cementary['id']}}">{{cementary['full_name']}} - {{cementary['full_address']}}</option>
-                                {% endfor %}
-                            </select>
-                        </section>
-                        <section class="form__group">
-                            <label for="gps_lon">Długość GPS: </label>
-                            <input name="gps_lon" class='form__input' required pattern="(-?\d{1,3}\.\d+)?" type="text" placeholder="GPS -- dł. w formacie xx.xxxxxx"
-                            />
-                            <label for="gps_lat">Szerokość GPS: </label>
-                            <input name="gps_lat" class='form__input' required pattern="(-?\d{1,3}\.\d+)?" type="text" placeholder="GPS -- szer. w formacie xx.xxxxxx"
-                            />
-                        </section>
-                        <section class='form__group'>
-                            <input type="button" id='sendMetadata'>Zapisz</button>
-                        </section>
-
-                    </form>
-                </section>
+                {% set type = "create" %}
+                {% set id   = "metadataForm" %}              
+                {% include "./panel/metadata.html" %}
             </section>
             <section class='panel__item' id='metadataUpdatePanel'>
-                <section class="panel__inside">
-                    <form class='panel__form' id='metadataUpdateForm'>
-                        <select id='selectGraveForUpdate' name="updatableGrave">
-                            <option disabled value="-">Wybierz osobę do edycji:</option>
-                            {% for grave in graves %}
-                            <option value="{{grave['id']}}">{{grave['name']}} {{grave['surname']}}</option>
-                            {% endfor %}
-                        </select>
-                        <section class='form__group'>
-                            <label for="name">Imię: </label>
-                            <input type="text" name="name" id='metaName' />
-                            <label for="surname">Nazwisko: </label>
-                            <input type="text" name="surname" id='metaSurname' />
-                            <label for="title">Tytuł naukowy: </label>
-                            <input type="text" name="title" id='metaTitle' placeholder='Tytuł naukowy' />
-                            <label for="title">Pełne imię i nazwisko wraz z tytułem naukowym: </label>
-                            <input type="text" name="full_name_with_title" id='metaTitle' />
-                        </section>
-                        <section class="form__group">
-                            <label for="date_of_birth">Data urodzenia</label>
-                            <input type="date" name="date_of_birth" id='metaBirthDate' />
-                        </section>
-                        <section class='form__group'>
-                            <label for="date_of_death">Data śmierci:</label>
-                            <input type="date" name="date_of_death" id='metaDeathDate' />
-                        </section>
-                        <section class="form__group">
-                            <label for="age">Wiek: </label>
-                            <input type="number" name="age"/>
-                        </section>
-                        <section class="form__group">
-                            <label for="cementary_id">Cmentarz</label>
-                            <select name="cementary_id">
-                                {% for cementary in cementaries %}
-                                <option value="{{cementary['id']}}">{{cementary['full_name']}} - {{cementary['full_address']}}</option>
-                                {% endfor %}
-                            </select>
-                        </section>
-                        <section class="form__group">
-                            <label for="gps_lon">Długość GPS: </label>
-                            <input name="gps_lon" class='form__input' required pattern="(-?\d{1,3}\.\d+)?" type="text" placeholder="GPS -- dł. w formacie xx.xxxxxx"
-                            />
-                            <label for="gps_lat">Szerokość GPS: </label>
-                            <input name="gps_lat" class='form__input' required pattern="(-?\d{1,3}\.\d+)?" type="text" placeholder="GPS -- szer. w formacie xx.xxxxxx"
-                            />
-                        </section>
-                        <section class='form__group'>
-                            <input type="button" id='updateMetadataBtn'>Aktualizuj</button>
-                        </section>
-                    </form>
-                </section>
+                {% set type = "update" %}
+                {% set id   = "metadataUpdateForm" %}
+                {% include "./panel/metadata.html" %} 
             </section>
             <!-- section#metadataUpdatePanel -->
             <section class="panel__item" id="editorUpdatePanel">
-                <section class="panel__inside editor">
-                    <section class='editor__bar'>
-                        <select name="grave_id">
-                            <option disabled value="-">Wybierz osobę do edycji:</option>
-                            {% for grave in graves %} 
-                            <option value="{{grave['id']}}">{{grave['full_name_with_title']}}</option>
-                            {% endfor %}
-                        </select>
-                    </section>
-                    <section class="editor__content">
-                        <section class="editor__input" contenteditable="true">
-                            <textarea class='editor__input--textarea' id='editorInput'></textarea>
-                        </section>
-                        <section class="editor__preview" id='editorPreview'></section>
-                    </section>
-                    <section class="editor__bar">
-                        <button id='refreshButton'>Odśwież</button>
-                        <button id='updateDescriptionBtn'>Aktualizuj</button>
-                    </section>
-                </section>
+                {% set type = "update" %}
+                {% include "./panel/editor.html" %}
             </section>
             <!-- section#metadataPanel -->
             <section class="panel__item" id="editorPanel">
-                <section class="panel__inside editor">
-                    <section class='editor__bar'>
-                        <select name="grave_id">
-                            {% for grave in graves %} 
-                            <option value="{{grave['id']}}">{{grave['full_name_with_title']}}</option>
-                            {% endfor %}
-                        </select>
-                    </section>
-                    <section class="editor__content">
-                        <section class="editor__input" contenteditable="true">
-                            <textarea class='editor__input--textarea' id='editorInput'></textarea>
-                        </section>
-                        <section class="editor__preview" id='editorPreview'></section>
-                    </section>
-                    <section class="editor__bar">
-                        <button id='refreshButton'>Odśwież</button>
-                        <button id='sendDescription'>Zapisz</button>
-                        
-                    </section>
-                </section>
+                {% set type = "create" %}
+                {% include "./panel/editor.html" %}
             </section>
             <!-- section#editorPanel -->
             <section class='panel__item' id='imageUpload'>
@@ -279,12 +152,12 @@
                 </section>
             </section>
             <section class="panel__item" id="images">
-                <section class="panel__inside">
+                <section class="panel__inside" style="overflow: scroll;">
                     <ul id='availableImages'>
                         {% for img in images %}
                         <li>
                             <p>{{img}}</p>
-                            <img class='img__list' src="/images/upload/{{img}}" />
+                            <img width="50%" height="50%" class='img__list' src="/images/upload/{{img}}" />
                         </li>
                         {% endfor %}
                     </ul>

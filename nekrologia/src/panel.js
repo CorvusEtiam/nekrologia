@@ -25,7 +25,13 @@ function saveMetadata() {
     })
     
     stored['cementary_id'] = document.querySelector('select[name="cementary_id"').value
+    if ( $('knownFullDate').value === true ) {
 
+    } 
+    
+    stored['date_of_birth']
+    stored['date_of_death']
+    
     $.ajax({
         type: "POST",
         url: '/api/create/grave',
@@ -138,6 +144,13 @@ window.onload = function() {
         out : 'editorPreview',
         preview : 'refreshButton'
     });    
+
+    $('.is__unknown').on('change', function(ev) {
+        var elem = ev.target.parentNode.parentNode.querySelector('input[name]');
+        elem.type = ( ev.target.checked ) ? "date" : "number"; 
+    })
+
+    
 
     $('#selectPersonToUpdate').on('change', function(el) {
         loadMetadata(el.target.value);
