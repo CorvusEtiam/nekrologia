@@ -58,6 +58,13 @@ function saveDescription() {
     })
 }
 
+function loadMetadata(grave_id) {
+    $.getJSON("/api/show/grave/" + grave_id, function(data) {
+        for ( var field_name in data ) {
+            $('#metadataUpdateForm input[name="' + field_name + '"]').value = data[field_name]
+        }    
+    })
+}
 
 
 (function() {
@@ -131,6 +138,10 @@ window.onload = function() {
         out : 'editorPreview',
         preview : 'refreshButton'
     });    
+
+    $('#selectPersonToUpdate').on('change', function(el) {
+        loadMetadata(el.target.value);
+    })
     
     $('#sendMetadata').on('click', function(ev) {
         ev.preventDefault();

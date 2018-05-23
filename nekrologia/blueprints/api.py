@@ -26,8 +26,8 @@ def list_resource(tablename):
     return jsonify({ row['id'] : dict(row) for row in res })
  
 @bp.route('/api/show/<string:tablename>/<int:uid>', methods = ['GET'])
-def show(tablename):
-    if request.method == 'POST':
+def show(tablename, uid):
+    if request.method == 'GET':
         if tablename not in ('grave', 'cementary', 'user'):
             return jsonify({'status_msg' : 'Table: ' + tablename + " is unknown"})
         data = get_db().execute('SELECT * FROM ? WHERE id = ?', (tablename, uid)).fetchone()
