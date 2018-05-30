@@ -10,7 +10,7 @@ bp = Blueprint('api', __name__)
 
 DEFAULT_RES_PATH = "/home/mrybicki/Project/necrologia/nekrologia/res/osoba/"
 
-@bp.route('/api/person/<int:user_id>', methods = ['GET'])
+@bp.route('/api/grave/<int:user_id>', methods = ['GET'])
 def person_descr(user_id):
     path = os.path.join(DEFAULT_RES_PATH, str(user_id) + '.html')
     if not os.path.exist(path):
@@ -30,7 +30,7 @@ def show(tablename, uid):
     if request.method == 'GET':
         if tablename not in ('grave', 'cementary', 'user'):
             return jsonify({'status_msg' : 'Table: ' + tablename + " is unknown"})
-        data = get_db().execute('SELECT * FROM ? WHERE id = ?', (tablename, uid)).fetchone()
+        data = get_db().execute('SELECT * FROM {} WHERE id = ?'.format(tablename), (uid, )).fetchone()
         return jsonify(dict(data))
 
 def api_create_helper(target, fields, data):
@@ -49,9 +49,10 @@ def api_create_helper(target, fields, data):
 
     db.execute(sql, placeholders)
     db.commit() 
-    
-    user = db.execute('SELECT id FROM {} WHERE name=? AND surname=?'.format(target), (data['name'], data['surname'])).fetchone()  
-    return {'status_msg' : 'ok', 'id' : user['id'] }
+    if target == 'grave':
+        grave = db.execute('SELECT id FROM {} WHERE name=? AND surname=?'.format(target), (data['name'], data['surname'])).fetchone()  
+        return {'status_msg' : 'ok', 'id' : grave['id'] }
+    return {"status_msg": "ok"}
 
 @bp.route('/api/create/<string:tablename>', methods = ['POST'])
 def create(tablename):
@@ -69,6 +70,11 @@ def create(tablename):
         return jsonify(result)
     elif tablename == 'cementary':
         fields = ("full_name", "full_address", "city")
+        print(json_data)
+        cementary = get_db().execute('SELECT id FROM cementary WHERE full_name=? AND city=?', (json_data['full_name'], json_data['city'])).fetchone()  
+        if cementary is not None:
+            return jsonify({'status_msg':  'Already exist'})
+        
         return jsonify(api_create_helper("cementary", fields, json_data))
     elif tablename == 'user':
         fields = ("username", "email", "password_hash", "admin_permit", "activated")
@@ -137,9 +143,10 @@ def update(param):
 
 @bp.route('/api/remove/<string:param>', methods = ['POST'])
 def remove(param):
+    if g.admin == None:
+        return jsonify({'status_msg' : "No access to remove endpoint"})
     if request.json == None:
-        return jsonify({'status_msg' : "AJAX problem -- json not visible for server"})
-    
+        return jsonify({'status_msg' : "AJAX problem -- json not visible for server"})    
     target = request.json.get('id', None)
     
     if target == None:

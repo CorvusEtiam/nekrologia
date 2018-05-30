@@ -1,0 +1,24 @@
+    <section class="panel__inside editor">
+        <section class='editor__bar'>
+            <select name="grave_id">
+                <option disabled value="-">Wybierz osobę do edycji:</option>
+                {% for grave in graves %} 
+                <option value="{{grave['id']}}">{{grave['full_name_with_title']}}</option>
+                {% endfor %}
+            </select>
+        </section>
+        <section class="editor__content">
+            <section class="editor__input" contenteditable="true">
+                <textarea class='editor__input--textarea' id='editorInput'></textarea>
+            </section>
+            <section class="editor__preview" id='editorPreview'></section>
+        </section>
+        <section class="editor__bar">
+            <button id='refreshButton'>Podgląd</button>
+            {% if type == "update" %}
+                <button id='updateDescriptionBtn'>Aktualizuj</button>
+            {% else %}
+                <button id='saveDescriptionBtn'>Zapisz</button>
+            {% endif %}
+        </section>
+    </section>

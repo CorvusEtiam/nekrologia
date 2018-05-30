@@ -29,6 +29,7 @@ body, html {
 
 .container__content {
     display: flex;
+    overflow: hidden;
     flex: 1;
     flex-direction: row;
 }
@@ -36,6 +37,7 @@ body, html {
 .left__container {
     height: 100%;
     background-color: darkgreen;
+    overflow-y: auto;
 }
 @media screen and (mix-width: 760px) {
     .left__container {

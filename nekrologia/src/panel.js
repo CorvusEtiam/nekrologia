@@ -152,24 +152,60 @@ window.onload = function() {
 
     
 
-    $('#selectPersonToUpdate').on('change', function(el) {
+    document.getElementById('selectGraveForUpdate').addEventListener('change', function(el) {
         loadMetadata(el.target.value);
     })
     
-    $('#sendMetadata').on('click', function(ev) {
+    document.getElementById('sendMetadata').addEventListener('click', function(ev) {
         ev.preventDefault();
         saveMetadata();
     })
 
-    $('#sendDescription').on('click', function(ev) {
+    document.getElementById('saveDescriptionBtn').addEventListener('click', function(ev) {
         ev.preventDefault();
         saveDescription();
     })
 
-    
 
-    $('#sendImage').on('click', function() {
-        var fi = $('#upload').files[0];
+    document.getElementById('cementaryPanelSaveButton').addEventListener('click', function() {
+        var stored = {}
+        document.querySelectorAll('#cementaryNewForm input[data-serialize="true"]').forEach(function(elem) {
+            stored[elem.getAttribute('name')] = elem.value;
+        })
+
+        $.ajax({
+            url: '/api/create/cementary',
+            type: 'POST',
+            data: JSON.stringify(stored),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function(res) {
+                if ( res.status_msg !== 'ok') {
+                    alert("Błąd");
+                    console.error("%o ", res)
+                } else {
+                    alert("OK");
+                }
+            }
+        })
+    }, false)
+
+    $('.btn__remove').on('click', function(ev) {
+        var grave_id = ev.target.getAttribute('data-target');
+        $.ajax({
+            type: 'POST',
+            url: "/api/remove/grave",
+            data: JSON.stringify({ id: grave_id }),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function(res) {
+                alert(res.status_msg);
+            }
+        })
+    })
+
+    document.getElementById('sendImage').addEventListener('click', function() {
+        var fi = document.getElementById('upload').files[0];
         var formData = new FormData();
         formData.append("picture", fi, fi.name)
         $.ajax({
