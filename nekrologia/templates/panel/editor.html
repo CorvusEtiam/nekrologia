@@ -21,4 +21,18 @@
                 <button id='saveDescriptionBtn'>Zapisz</button>
             {% endif %}
         </section>
+        <section class='editor__modal' id='editorAlignModal'>
+            <header class='editor__modal--header'>Ustaw położenie zdjęcia</header>
+            <section class="editor__modal--content">
+                <label for='align_image'>Zmień położenie obrazu w poziomie</label>
+                <select name='align_image'>
+                    <option value='center'>Centrum</option>
+                    <option value='left'>Lewo</option>
+                    <option value='right'>Prawo</option>
+                </select>
+            </section>
+            <footer class='editor__modal--header'>
+                <button id='saveAlignment'>Zapisz</button>
+            </footer>
+        </section>
     </section>

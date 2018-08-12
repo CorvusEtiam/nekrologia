@@ -1,3 +1,19 @@
+var Modal = (function() {
+    function Modal(options) {
+        this.id = document.getElementById(options.id);
+        this.elem = document.getElementById(options.id);
+    }
+
+    Modal.prototype.show = function() {
+        this.elem.classList.add('active');
+    }
+    
+    Modal.prototype.hide = function() {
+        this.elem.classList.remove('active');    
+    }
+    return Modal;
+})
+
 
 function sidebar() {
     var items = document.getElementsByClassName('sidebar__item');
@@ -29,8 +45,8 @@ function saveMetadata() {
 
     } 
     
-    stored['date_of_birth']
-    stored['date_of_death']
+    // stored['date_of_birth']
+    // stored['date_of_death']
     
     $.ajax({
         type: "POST",
@@ -66,10 +82,13 @@ function saveDescription() {
 
 function loadMetadata(grave_id) {
     $.getJSON("/api/show/grave/" + grave_id, function(data) {
-        for ( var field_name in data ) {
-            $('#metadataUpdateForm input[name="' + field_name + '"]').value = data[field_name]
-        }    
-    })
+            $('#metadataUpdateForm input').each(function(elem) {
+                var name = elem.getAttribute('name');
+                if ( data[name] !== undefined ) {
+                    $(elem).value(data[name]);
+                }
+            });    
+    });
 }
 
 

@@ -11,36 +11,42 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
         crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=EB+Garamond|Forum" rel="stylesheet">
-    <link rel="stylesheet" href="styles/root.css?v=1.52" type="text/css" />
+    <link rel="stylesheet" href="styles/root.css" type="text/css" />
     <script src="src/external/jquery-3.2.1.js"></script>
     <script>
-    /* init-modal */
-    $(window).on("load", function() {
-        $('#info-modal').modal('show');  
-        $('#my-nav-about a').on('click', function() {
+        /* init-modal */
+        $(window).on("load", function () {
             $('#info-modal').modal('show');
+            $('#my-nav-about a').on('click', function () {
+                $('#info-modal').modal('show');
+            })
         })
-    })
-
     </script>
     <title>Nekrologia</title>
 </head>
+
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top" id='my-nav'>
         <div class="navbar-header">
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".js-navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#">Nekrologia</a>
         </div>
         <div class="collapse navbar-collapse js-navbar-collapse">
             <ul class="navbar navbar-nav">
-                <li><a href="#" data-link-id="about-page">O stronie</a></li>
-                <li><a href="#" data-link-id="cementary-list">Cmentarze</a></li>
-                <li><a href="#" data-link-id="search-bar">O stronie</a></li>
+                <li>
+                    <a href="#" data-link-id="about-page">O stronie</a>
+                </li>
+                <li>
+                    <a href="#" data-link-id="cementary-list">Cmentarze</a>
+                </li>
+                <li>
+                    <a href="#" data-link-id="search-bar">O stronie</a>
+                </li>
             </ul>
         </div>
         <div class="container-fluid">
@@ -50,16 +56,30 @@
                         <span class='caret'></span>
                     </a>
                     <ul>
-                        <li id='my-search'><a href="#">Cmentarze</a></li>   
-                        <li id='cmentarze'><a href="#">Wyszukaj</a></li>   
-                        <li id='about-page'><a href="#">O stronie</a></li>   
-                        
+                        <li id='my-search'>
+                            <a href="#">Cmentarze</a>
+                        </li>
+                        <li id='cmentarze'>
+                            <a href="#">Wyszukaj</a>
+                        </li>
+                        <li id='about-page'>
+                            <a href="#">O stronie</a>
+                        </li>
+
                     </ul>
                 </li>
-                <li id='my-nav-list' class='active'><a href="#">Lista osób</a></li>
-                <li id='my-nav-map'><a href="#">Mapa</a></li>   
-                <li id='my-nav-descr' class='hidden'><a href="#">Opis</a></li>   
-                <li id='my-nav-about'><a href="#">O stronie</a></li>   
+                <li id='my-nav-list' class='active'>
+                    <a href="#">Lista osób</a>
+                </li>
+                <li id='my-nav-map'>
+                    <a href="#">Mapa</a>
+                </li>
+                <li id='my-nav-descr' class='hidden'>
+                    <a href="#">Opis</a>
+                </li>
+                <li id='my-nav-about'>
+                    <a href="#">O stronie</a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -83,11 +103,14 @@
                         <li class='person-list__item' data-person-id="{{grave['id']}}">
                             <div class='person-wrapper'>
                                 <div class='name'>{{grave['full_name_with_title']}}</div>
-                                <div class='dates'><span>{{grave['date_of_birth']}}</span> - <span>{{grave['date_of_death']}}</span></div>
+                                <div class='dates'>
+                                    <span>{{grave['date_of_birth']}}</span> -
+                                    <span>{{grave['date_of_death']}}</span>
+                                </div>
                             </div>
                         </li>
                         {% endfor %}
-                            <!-- 
+                        <!-- 
                             <li class='person-list__item' data-person-id="">
                                 <div class='person-wrapper'>
                                     <div class='name'>Imię Nazwisko</div>
@@ -112,51 +135,63 @@
     </div>
     <div id='right-sidebar'>
         <section class='container-fluid'>
-        <ul>
-            <li><a id='show-on-google' href="#">Pokaż na mapach Google</a></li>
-            <li><a id='close-descr' href="#" onclick="rightSidebar.hide();">Zamknij opis</a></li>
-    <!--                <li><a id='print-plan' href="#">Drukuj plan cmentarza</a></li> -->
-        </ul>
-    </section>
-    <section class="sidebar-content">
-        <section id="name"></section>
-        <section class="panel-group">
-            <div class="panel panel-default">
-              <div class='panel-heading'>Data urodzenia</div>  
-              <div id="of-birth" class="panel-body"></div>
-            </div>
-            <div class="panel panel-default">
-                <div class='panel-heading'>Data śmierci</div>      
-                <div id='of-death' class="panel-body"></div>
-            </div>
+            <ul>
+                <li>
+                    <a id='show-on-google' href="#">Pokaż na mapach Google</a>
+                </li>
+                <li>
+                    <a id='close-descr' href="#" onclick="rightSidebar.hide();">Zamknij opis</a>
+                </li>
+                <!--                <li><a id='print-plan' href="#">Drukuj plan cmentarza</a></li> -->
+            </ul>
         </section>
-        <section id="person-descr">
+        <section class="sidebar-content">
+            <section id="name"></section>
+            <section class="panel-group">
+                <div class="panel panel-default">
+                    <div class='panel-heading'>Data urodzenia</div>
+                    <div id="of-birth" class="panel-body"></div>
+                </div>
+                <div class="panel panel-default">
+                    <div class='panel-heading'>Data śmierci</div>
+                    <div id='of-death' class="panel-body"></div>
+                </div>
+            </section>
+            <section id="person-descr">
+            </section>
         </section>
-    </section>
     </div>
     <div id="info-modal" class="modal fade" tabindex='-1' role='dialog'>
-		<div class='modal-dialog' role='document'>
+        <div class='modal-dialog' role='document'>
             <div class='modal-content'>
-                    <section class='modal-header'>
-            <ul class="nav nav-tabs">
-                    <li class="active"><a href="#o_stronie" data-toggle="tab">O stronie</a></li>
-                    <li><a href="#o_autorach" data-toggle="tab">O autorach</a></li>
-            </ul>
+                <section class='modal-header'>
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#o_stronie" data-toggle="tab">O stronie</a>
+                        </li>
+                        <li>
+                            <a href="#o_autorach" data-toggle="tab">O autorach</a>
+                        </li>
+                    </ul>
                     <section class="modal-body">
                         <div class='tab-content'>
                             <div id="o_stronie" class="tab-pane fade in active">
+                                    {% include "frontend/about_page.html" %}
                             </div>
                             <div id="o_autorach" class="tab-pane fade active">
+                                    {% include "frontend/about_author.html" %}
                             </div>
-                    </div>			
+                        </div>
                     </section>
-                <section class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
-                </section>
-            </div> <!-- .model-content -->
-        </div> <!-- .model-dialog -->        
+                    <section class="modal-footer">
+                         <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                    </section>
+            </div>
+            <!-- .model-content -->
+        </div>
+        <!-- .model-dialog -->
     </div>
-        
+
     <div id='show-info__container'>
         <!-- Wyszukaj -->
         <!-- Cmentarze -->
@@ -166,7 +201,7 @@
             <ul class="navbar nav">
                 <li></li>
                 <li></li>
-                <li></li>                
+                <li></li>
             </ul>
         </div>
         <button onclick="$('#info-modal').modal('show');">O stronie</button>

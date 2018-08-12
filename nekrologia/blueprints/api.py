@@ -10,11 +10,11 @@ bp = Blueprint('api', __name__)
 
 DEFAULT_RES_PATH = "/home/mrybicki/Project/necrologia/nekrologia/res/osoba/"
 
-@bp.route('/api/grave/<int:user_id>', methods = ['GET'])
-def person_descr(user_id):
-    path = os.path.join(DEFAULT_RES_PATH, str(user_id) + '.html')
-    if not os.path.exist(path):
-        path = os.path.join(current_app.instance_path, '/res/osoba/error.html')
+@bp.route('/api/grave/<int:grave_id>', methods = ['GET'])
+def person_descr(grave_id):
+    path = os.path.join(DEFAULT_RES_PATH, str(grave_id) + '.html')
+    if not os.path.exists(path):
+        path = os.path.join(DEFAULT_RES_PATH, 'error.html')
     with open(path, 'r') as fi:
         return Response(fi.read(), mimetype = "text/html")
     

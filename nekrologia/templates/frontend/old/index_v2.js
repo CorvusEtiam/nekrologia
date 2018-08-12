@@ -138,7 +138,9 @@ $(window).ready(function() {
             person.marker.addTo(ns.map);
         },
 
-        center_map : function(lat, lon) {},
+        center_map : function(lat, lon) {
+            ns.map.setView([lat, lon], 18);
+        },
         
     }
 
@@ -181,11 +183,11 @@ $(window).ready(function() {
             }
         },
 
-        showSidebar: function () {
+        show: function () {
             ns.leftSidebar.style.display = "block";
         },
 
-        hideSidebar: function() {
+        hide: function() {
             ns.leftSidebar.style.display = 'none';
         }
     }

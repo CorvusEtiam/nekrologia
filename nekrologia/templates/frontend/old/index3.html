@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" type="text/css" href="styles/L.Control.Sidebar.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=EB+Garamond|Forum" rel="stylesheet">
+    <link rel="stylesheet" href="styles/root.css?v=1.4" type="text/css" />
+    <script src="src/external/jquery-3.2.1.js"></script>
+    <script>
+        var show_modal = function() {
+            $('#info-modal').modal('show');
+        }
+
+        $(window).ready(show_modal);
+
+        $('#my-nav-about').on('click', show_modal);
+    </script>
+    <title>Nekrologia</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" id='my-nav'>
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li id='my-nav-list' class='active'><a href="#">Lista osób</a></li>
+                <li id='my-nav-map'><a href="#">Mapa</a></li>
+                <li id='my-nav-descr' class='hidden'><a href="#">Opis</a></li>
+                <li id='my-nav-about'><a href="#" onclick="$('#info-modal').modal('show')">O stronie</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div id="container" data-state='0'>
+        <div id='left-sidebar'>
+            <div id="left-sidebar__wrapper">
+                <div id="left-sidebar__content">
+                    <ul id='person-list__wrapper'>
+                        <!--
+                            <li class='person-list__item' data-person-id='jan_kowalski'>
+                                <div class='person-wrapper'>
+                                    <div class='name'>Imię Nazwisko</div>
+                                    <div class='dates'>Data Urodzenia</div>
+                                </div>
+                            </li>
+                        -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="map"></div>
+    </div>
+    <div id='right-sidebar'>
+        <section class='container-fluid'>
+            <ul>
+                <li><a id='show-on-google' href="#">Pokaż na mapach Google</a></li>
+                <li><a id='close-descr' href="#" onclick="rightSidebar.hide();">Zamknij opis</a></li>
+                <!-- <li><a id='print-plan' href="#">Drukuj plan cmentarza</a></li> -->
+            </ul>
+        </section>
+        <section class="sidebar-content">
+            <section id="name"></section>
+            <section class="panel-group">
+                <div class="panel panel-default">
+                  <div class='panel-heading'>Data urodzenia</div>
+                  <div id="of-birth" class="panel-body"></div>
+                </div>
+                <div class="panel panel-default">
+                    <div class='panel-heading'>Data śmierci</div>
+                    <div id='of-death' class="panel-body"></div>
+                </div>
+            </section>
+            <section id="person-descr">
+            </section>
+        </section>
+    </div>
+    <div id="info-modal" class="modal fade" tabindex='-1' role='dialog'>
+		<div class='modal-dialog' role='document'>
+	    <div class='modal-content'>
+
+	    <section class='modal-header'>
+	            <ul class="nav nav-tabs">
+			        <li class="active"><a href="#o_stronie" data-toggle="tab">O stronie</a></li>
+			        <li><a href="#o_autorach" data-toggle="tab">O autorach</a></li>
+	            </ul>
+	    </section> <!-- modal-header -->
+
+	    <section class="modal-body">
+			<section class='tab-content'>
+		        <div id="o_stronie" class="tab-pane fade in active">
+                    <h2 id="centered">Drogi użytkowniku</h2>
+			        <p>
+Aplikacja została stworzona z myślą o absolwentach i studentach Wydziału Leśnego w Poznaniu.
+Mamy nadzieję że nasza praca będzie pomocnym narzędziem do budowy pamięci i szacunku dla naszych zmarłych wykładowców.
+Wszelkie biografie pochodzą z <span class="citation">,,Zeszytu Jubileuszowego Wydziału Leśnego”</span> pod redakcją prof. zw. dr hab.  Zefiryna Adamskiego.
+W aplikacji zostały wykorzystane również materiały z zasobów prywatnych dr hab. Jarosława Szabana.
+W razie problemów pomoc techniczną można uzyskać pod numerem telefonu 723 039 944.
+			        </p>
+			        <div id="logo" class="separated">
+                        <div class="logo-wrapper" id="logo-wles" ><img src="images/wles.png"></div>
+                        <div class="logo-wrapper" id="logo-up" ><img src="images/up_poz.png"></div>
+                        <div class="logo-wrapper" id="logo-sekcji" ><img src="images/sekcja.png"></div>
+                    </div>
+			        <!--
+			        <img src="logo_wl.jpg"/>
+			        <img src="logo_kl.jpg"/>
+			        -->
+			    </div>
+		        <div id="o_autorach" class="tab-pane fade active">
+                    <div>
+                        <p>Na stronie wykorzystano opisy z <span class="citation">"Zeszytu Jubileuszowego Wydziału Leśnego"</span> pod redakcją prof. zw. dr hab. Zefiryna Adamskiego.
+                            Chcielibyśmy szczególnie podziękować autorom opisów zamieszczonych na tejże witrynie
+                        </p>
+                        <ul>
+                            <li>prof. nadzw. dr hab. inż. Bogusław Kamiński</li>
+                            <li>prof. zw. dr hab. Małgorzata Mańka</li>
+                            <li>dr hab. Władysław Danielewicz</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p>Przygotowanie strony</p>
+                        <ul>
+                            <li>Sekcja Historii Leśnictwa Koła Leśników Uniwersytetu Przyrodniczego w Poznaniu
+                                <ul>
+                                    <li>Opiekun sekcji: <b>Dr hab. Jarosław Szaban</b></li>
+                                    <li>Konrad Kupajczyk</li>
+                                    <li>Mateusz Wiśniewski</li>
+                                    <li>Paweł Ramik</li>
+                                    <li>Dariusz Stencel</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p>Projekt strony</p>
+                        <ul>
+                            <li><a href="mailto:mrybicki.95@gmail.com">Michał Rybicki</a></li>
+                        </ul>
+                    </div>
+			    </div>
+            </section>
+
+	    </section>
+
+		<section class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+		</section>
+
+	    </div> <!-- .model-content -->
+        </div> <!-- .model-dialog -->
+    </div>
+    <div id='show-info__container'>
+        <button onclick="$('#info-modal').modal('show');">O stronie</button>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="src/external/L.Control.Sidebar.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <script src="src/root.js?v=1.1"></script>
+</body>
+
+</html>

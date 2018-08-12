@@ -39,9 +39,10 @@ body, html {
     background-color: darkgreen;
     overflow-y: auto;
 }
+
 @media screen and (mix-width: 760px) {
     .left__container {
-        width: 10em;
+        width: 15em;
     }
 }
 
@@ -54,7 +55,6 @@ body, html {
 
 .map__container {
     flex: 1;
-    background: yellow;
 }
 
 .cornermenu__container,
@@ -169,6 +169,16 @@ body, html {
     background: forestgreen;
 }
 
+.person__item .person__buttons {
+    display: none;
+}
+
+.person__item .person__buttons.active {
+    display: flex;
+}
+
+
+
 .person__data {
     padding-top: 10px;
     text-align: center;
@@ -180,12 +190,9 @@ body, html {
 }
 
 .person__buttons {
+    padding: 0.5em;
     display: flex;
     flex-direction: row;
-}
-
-.person__buttons:not(.active) {
-    display: none;
 }
 
 .person__button {

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="styles/L.Control.Sidebar.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles/index.css" />
+    <title>Nekrologia</title>
+</head>
+<body>
+    <div class='container'>
+        <nav class='cornermenu__container'>
+            <button class='cornermenu__button button__toggle' data-target='TopMenu'>
+                Menu
+            </button>
+            <ul id='TopMenu' class='menu'>
+                <li class="menu__text">
+                    {{ city }}
+                </li>
+                <li class='menu__item button__toggle' data-target='aboutPopup'>
+                    O stronie
+                </li>
+                <!-- 
+                <li class='menu__item' data-target='map'>
+                    Mapa
+                </li>
+                <li class='menu__item' data-target='personList'>
+                    Lista osób
+                </li>
+                <li class='menu__item' data-target='personDescription'>
+                    Lista osób
+                </li>
+                -->
+            </ul>
+            <!-- menu-button -->
+            <!-- lista zakładek -->
+        </nav>
+        <div class='container__content'>
+            <div class='left__container' id='leftSidebar'>
+                <div id="left__content">
+                    <ul class='person__list'>
+                        {% for grave in graves %}
+                        <li class='person__item' data-person-id="{{grave['id']}}" id="person_{{grave['id']}}">
+                            <div class='person__item--wrap'>
+                                <div class='person__data'>
+                                    <div class='person__data--name'>{{grave['name']}} {{grave['surname']}}</div>
+                                    <div class='person__data--dates'>
+                                        <span class='person__data--birth'>{{grave['date_of_birth']}}</span> -
+                                        <span class='person__data--death'>{{ grave['date_of_death']}}</span>
+                                    </div>
+                                </div>
+                                <div class="person__buttons">
+                                    <button class='person__button' data-target='map'>Mapa</button>
+                                    <button class='person__button' data-target='descr'>Opis</button>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class='map__container' id='map'></div>
+            <div id='rightSidebar' class='right__container'>
+                <nav class='right__menu'>
+                    <section id="navigate">
+                        <a href="#" id='navigateToMap'>Nawiguj</section>
+                    <section id="zoom">Mapa</section>
+                </nav>
+                <h1 id="fullName"></h1>
+                <table id='rs__table'>
+                    <tr>
+                        <td class='rs__key'>Cmentarz: </td>
+                        <td class='rs__val' id='cementaryName'></td>
+                    </tr>
+                    <tr>
+                        <td class='rs__key'>Data urodzenia: </td>
+                        <td class='rs__val' id='dateOfBirth'></td>
+                    </tr>
+                    <tr>
+                        <td class='rs__key'>Data śmierci: </td>
+                        <td class='rs__val' id='dateOfDeath'></td>
+                    </tr>
+                    <tr>
+                        <td class='rs__key'>Miasto pochówku: </td>
+                        <td class='rs__value' id='city'></td>
+                    </tr>
+                </table>
+                <div class='personDescription'>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="src/external/L.Control.Sidebar.js"></script>
+    <script src="src/index.js"></script>
+</body>
+</html>

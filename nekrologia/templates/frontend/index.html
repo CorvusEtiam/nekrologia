@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
@@ -9,20 +10,21 @@
     <link rel="stylesheet" href="styles/index.css" />
     <title>Nekrologia</title>
 </head>
+
 <body>
     <div class='container'>
         <nav class='cornermenu__container'>
-            <button class='cornermenu__button button__toggle' data-target='TopMenu'>
+            <button class='cornermenu__button button__toggle' data-target='topMenu'>
                 Menu
             </button>
-            <ul id='TopMenu' class='menu'>
+            <ul id='topMenu' class='menu'>
                 <li class="menu__text">
                     {{ city }}
                 </li>
-                <li class='menu__item button__toggle' data-target='aboutPopup'>
+                <li class='menu__item button__toggle' id='menuAbout' data-target='aboutPopup'>
                     O stronie
                 </li>
-                <!-- 
+                
                 <li class='menu__item' data-target='map'>
                     Mapa
                 </li>
@@ -30,9 +32,8 @@
                     Lista osób
                 </li>
                 <li class='menu__item' data-target='personDescription'>
-                    Lista osób
+                    Opis 
                 </li>
-                -->
             </ul>
             <!-- menu-button -->
             <!-- lista zakładek -->
@@ -62,40 +63,145 @@
                 </div>
             </div>
             <div class='map__container' id='map'></div>
-            <div id='rightSidebar' class='right__container'>
-                <nav class='right__menu'>
-                    <section id="navigate">
-                        <a href="#" id='navigateToMap'>Nawiguj</section>
-                    <section id="zoom">Mapa</section>
-                </nav>
-                <h1 id="fullName"></h1>
-                <table id='rs__table'>
-                    <tr>
-                        <td class='rs__key'>Cmentarz: </td>
-                        <td class='rs__val' id='cementaryName'></td>
-                    </tr>
-                    <tr>
-                        <td class='rs__key'>Data urodzenia: </td>
-                        <td class='rs__val' id='dateOfBirth'></td>
-                    </tr>
-                    <tr>
-                        <td class='rs__key'>Data śmierci: </td>
-                        <td class='rs__val' id='dateOfDeath'></td>
-                    </tr>
-                    <tr>
-                        <td class='rs__key'>Miasto pochówku: </td>
-                        <td class='rs__value' id='city'></td>
-                    </tr>
-                </table>
-                <div class='personDescription'>
+            
+            <div class='right__container' id='rightSidebar'>
+                <section class='container-fluid'>
+                    <ul>
+                        <li>
+                            <a id='show-on-google' href="#">Pokaż na mapach Google</a>
+                        </li>
+                        <li>
+                            <a id='close-descr' href="#" onclick="rightSidebar.hide();">Zamknij opis</a>
+                        </li>
+                        <li><a id='print-plan' href="#">Drukuj plan cmentarza</a></li>
+                    </ul>
+                </section>
+                <section class="sidebar-content">
+                    <section id="fullName"></section>
+                    <section class="panel-group">
+                        <div class="panel panel-default">
+                            <div class='panel-heading'>Data urodzenia</div>
+                            <div id="dateOfBirth" class="panel-body"></div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class='panel-heading'>Data śmierci</div>
+                            <div id='dateOfDeath' class="panel-body"></div>
+                        </div>
+                    </section>
+                    <section id="personDescription">
+                    </section>
+                    <section id="city"></section>
+                    <section id="cementaryName"></section>
+                </section>
+
+
+
+            </div>
+        
+            <div class="modal__container modal fade" id="infoModal" tabindex='-1' role='dialog' style="display:none">
+                <div class='modal-dialog' role='document'>
+                    <div class='modal-content'>
+
+                        <section class='modal-header'>
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#o_stronie" data-toggle="tab">O stronie</a>
+                                </li>
+                                <li>
+                                    <a href="#o_autorach" data-toggle="tab">O autorach</a>
+                                </li>
+                            </ul>
+                        </section>
+                        <!-- modal-header -->
+
+                        <section class="modal-body">
+                            <section class='tab-content'>
+                                <div id="o_stronie" class="tab-pane fade in active">
+                                    <h2 id="centered">Drogi użytkowniku</h2>
+                                    <p>
+                                        Aplikacja została stworzona z myślą o absolwentach i studentach Wydziału Leśnego w Poznaniu. Mamy nadzieję że nasza praca
+                                        będzie pomocnym narzędziem do budowy pamięci i szacunku dla naszych zmarłych wykładowców.
+                                        Wszelkie biografie pochodzą z
+                                        <span class="citation">,,Zeszytu Jubileuszowego Wydziału Leśnego”</span> pod redakcją prof. zw. dr hab.
+                                        Zefiryna Adamskiego. W aplikacji zostały wykorzystane również materiały z zasobów
+                                        prywatnych dr hab. Jarosława Szabana. W razie problemów pomoc techniczną można uzyskać
+                                        pod numerem telefonu 723 039 944.
+                                    </p>
+                                    <div id="logo" class="separated">
+                                        <div class="logo-wrapper" id="logo-wles">
+                                            <img src="images/wles.png">
+                                        </div>
+                                        <div class="logo-wrapper" id="logo-up">
+                                            <img src="images/up_poz.png">
+                                        </div>
+                                        <div class="logo-wrapper" id="logo-sekcji">
+                                            <img src="images/sekcja.png">
+                                        </div>
+                                    </div>
+                                    <!--
+                                        <img src="logo_wl.jpg"/>
+                                        <img src="logo_kl.jpg"/>
+                                        -->
+                                </div>
+                                <div id="o_autorach" class="tab-pane fade active">
+                                    <div>
+                                        <p>Na stronie wykorzystano opisy z
+                                            <span class="citation">"Zeszytu Jubileuszowego Wydziału Leśnego"</span> pod redakcją prof. zw. dr hab.
+                                            Zefiryna Adamskiego. Chcielibyśmy szczególnie podziękować autorom opisów zamieszczonych
+                                            na tejże witrynie
+                                        </p>
+                                        <ul>
+                                            <li>prof. nadzw. dr hab. inż. Bogusław Kamiński</li>
+                                            <li>prof. zw. dr hab. Małgorzata Mańka</li>
+                                            <li>dr hab. Władysław Danielewicz</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <p>Przygotowanie strony</p>
+                                        <ul>
+                                            <li>Sekcja Historii Leśnictwa Koła Leśników Uniwersytetu Przyrodniczego w Poznaniu
+                                                <ul>
+                                                    <li>Opiekun sekcji:
+                                                        <b>Dr hab. Jarosław Szaban</b>
+                                                    </li>
+                                                    <li>Konrad Kupajczyk</li>
+                                                    <li>Mateusz Wiśniewski</li>
+                                                    <li>Paweł Ramik</li>
+                                                    <li>Dariusz Stencel</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <p>Projekt strony</p>
+                                        <ul>
+                                            <li>
+                                                <a href="mailto:mrybicki.95@gmail.com">Michał Rybicki</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </section>
+
+                        </section>
+
+                        <section class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                        </section>
+
+                    </div>
+                    <!-- .model-content -->
                 </div>
+                <!-- .model-dialog -->
             </div>
         </div>
-        
     </div>
-    
+    </div>
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
     <script src="src/external/L.Control.Sidebar.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
     <script src="src/index.js"></script>
 </body>
 </html>

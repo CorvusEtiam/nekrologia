@@ -1,0 +1,17 @@
+1|Tadeusz|Cybulko|Prof. dr. hab|Prof. dr. hab. Tadeusz Cybulko|1929-04-22|2010-10-10|1|52.438866|16.891833
+2|Józef|Rivoli|Prof.|Prof. Józef Rivoli|1838-10-03|1926-02-16|1|52.439183|16.891383
+3|Karol|Mańka|prof. zw. dr. hab.|prof. zw. dr. hab. Karol Henryk Mańka|1915-01-07|2003-10-29|1|52.43875|16.891516
+4|Jan|Meixner|prof. zw.|prof. zw. Jan Meixner|1926|1997|1|52.4389|16.891483
+5|Stanisław|Runge|prof.|prof. Stanisław Izydor Runge|1888-05-03|1953-06-02|1|52.439|16.891333
+6|Konstanty|Stecki|prof.|prof. Konstanty Stecki|1885-07-29|1978-10-04|1|52.4391|16.890733
+7|Kazimierz|Gawęcki|prof. zw.|prof. zw. Kazimierz Gawęcki|1915-04-02|2003-01-20|1|52.439033|16.89145
+8|Bogusław|Fruziński|dr. hab. prof. nadzw.|dr. hab. prof. nadzw. Bogusław Fruziński|1939-12-21|2005-07-18|1|52.438816|16.891566
+9|Julian|Rafalski|prof. zw. dr. hab.|prof. zw. dr. hab. Julian Rafalski|1879-05-23|1949-11-23|1|52.438816|16.891566
+10|Władysław|Smosarski|dr. hab. prof. nadzw.|dr. hab. prof. nadzw. Władysław Smosarski|1876-09-30|1960-05-21|1|52.438766|16.891383
+11|Stanisław|Stryła|prof. nadzw. doc. dr. hab|prof. nadzw. doc. dr. hab. Stanisław Stryła|1901-03-23|1992-08-01|1|52.4398|16.891216
+12|Stanisław|Kościelny|mgr|mgr Stanisław Kościelny|1901-03-21|1973-01-30|1|52.386265|16.875726
+13|Wiesław|Szczerbiński|prof.|prof. Wiesław Szczerbiński|1900-09-20|1972-05-02|2|52.387236|16.876913
+14|Zbigniew|Gądziński|||1916|1997-08-30|3|52.415359|16.879194
+15|Zenon|Rzeźnik|doc.|doc. Zenon Rzeźnik|1928|2006|3|52.415333|16.879253
+16|Stanisław|Zabielski|prof. zw. |prof. zw. Stanisław Zabielski|1928-09-17|2005-02-09|3|52.415397|16.879107
+17|Józef|Goetz|prof. zw. |prof. zw. Stanisław Zabielski|1903-03-02|1951-02-22|3|52.415388|16.879058
