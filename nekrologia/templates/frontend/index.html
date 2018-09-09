@@ -62,11 +62,11 @@
                         </li>
                         {% endfor %}
                     </ul>
-                    </div>
                 </div>
-                <div class='map__container' id='map'></div>
+            </div>
+            <div class='map__container' id='map'></div>
                 <div class='right__container' id='rightSidebar'>
-                {% include "frontend/rightside.html" %}
+                    {% include "frontend/rightside.html" %}
                 </div> <!-- right__container -->
             </div> <!-- container__content -->
             {% include "frontend/modal.html" %}
@@ -74,7 +74,6 @@
             <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
             <script src="src/external/L.Control.Sidebar.js"></script>
             <script src="src/index.js"></script>
-
 </body>
 
 </html>

@@ -1,0 +1,29 @@
+<div class="panel__container">
+    <header class="panel__header bg-dark">Moje konto</header>
+    <section class="panel__body container">
+        <div class="row" id="userName">
+            <div class="col"><span>Nazwa użytkownika</span></div>
+            <div class="col"><span>{{g.user.username}}</span></div>
+        </div>
+        <div class="row" id="userEmail">
+            <div class="col"><span>E-mail użytkownika</span></div>
+            <div class="col"><span>{{g.user.email}}</span></div>    
+        </div>
+        <div class="row" id="userPassword">
+            <div class="col"><span>Hasło</span></div>
+            <div class="col"><button class="btn btn-primary" data-action="change-password">Zmiana hasła</button></div>    
+        </div>
+        <div class="row" id="accountType">
+            <div class="col">
+                <span>Typ konta</span>
+            </div>
+            <div class="col">
+                {% if g.admin == 1 %}
+                <span class="yes">Tak</span>
+                {% else %}
+                <span class="no">Nie</span>
+                {% endif %}
+            </div>
+        </div>
+    </section> <!-- .panel__body-->
+</div>     

@@ -1,0 +1,38 @@
+<div class="panel__container">
+    <header class="panel__header bg-dark">Zarządzaj kontami</header>
+    <section class="panel__body">
+        <table class='panel__table table'>
+            <thead>
+                <tr>
+                    <th>Nazwa użytkownika</th>
+                    <th>Email</th>
+                    <th>Admin</th>
+                    <th>Aktywne</th>
+                    <th>Usuń</th>
+                    <th>Edytuj
+                </tr>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr data-user-id="{{user['id']}}">
+                    <td>{{user['username']}}</td>
+                    <td>{{user['email']}}</td>
+                    <td>{% if user['admin_permit'] == 1 %}
+                        <span class='yes'>TAK</span>{% else %}
+                        <span class='no'><button class="btn btn-danger act__btn" data-action="make-admin"  data-target="{{user['id']}}">Daj uprawnienia</button></span>{% endif %}</td>
+                    <td>{% if user['activated'] == 1 %}
+                        <span class='yes'>TAK</span>{% else %}
+                        <span class='no'><button class="btn btn-warning act__btn" data-action="activate-account"  data-target="{{user['id']}}">Aktywuj</button></span>{% endif %}</td>
+                    <td>
+                        <button class='btn__remove btn btn-danger' data-target="{{user['id']}}" data-action="remove-account">Usuń</button>
+                    </td>
+                    <td>
+                        <button class='btn__edit btn btn-primary' data-target="{{user['id']}}" data-action="edit-account">Edytuj</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>

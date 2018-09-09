@@ -1,0 +1,14 @@
+<div class="panel__container">
+    <header class="panel__header bg-dark">Dodaj opis</header>
+    <section class="panel__body">
+        <select>
+            <option disabled value="_">Wybierz osobę, by dodać opis</option>
+            {% for grave in graves %} 
+            <option value="{{grave['id']}}">{{grave['full_name_with_title']}}</option>
+            {% endfor %}
+        </select>
+        <div id="editorNewGrave">
+        </div>
+        <button id="saveGraveDescription" data-action="save-description">Zapisz</button>
+    </section>
+</div>

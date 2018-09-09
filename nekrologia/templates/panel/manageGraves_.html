@@ -1,0 +1,29 @@
+<div class="panel__container">
+    <header class="panel__header bg-dark">Zarządzaj grobami</header>
+    <section class="panel__body">
+        <table class='panel__table table'>
+            <thead>
+                <tr>
+                    <th>Imię</th>
+                    <th>Nazwisko</th>
+                    <th>Data ur.</th>
+                    <th>Data śm.</th>
+                    <th>Szer. GPS</th>
+                    <th>Dł. GPS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grave in graves %}
+                <tr>
+                    <td>{{grave["name"]}}</td>
+                    <td>{{grave["surname"]}}</td>
+                    <td>{{grave["date_of_birth"]}}</td>
+                    <td>{{grave["date_of_death"]}}</td>
+                    <td>{{grave["gps_lon"]}}</td>
+                    <td>{{grave["gps_lat"]}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>

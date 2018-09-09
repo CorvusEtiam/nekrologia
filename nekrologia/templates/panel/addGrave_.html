@@ -1,0 +1,63 @@
+<div class="panel__container">
+    <header class="panel__header bg-dark">Dodaj grób</header>
+    <section class="panel__body">
+        <form class='panel__form' id="{{id}}">
+            <input type="hidden" id='currentGrave' />
+            <section class='form-group form__group'>
+                <label for="name">Imię: </label>
+                <input type="text" data-serialize="true" name="name" id='metaName' />
+                <label for="surname">Nazwisko: </label>
+                <input type="text" data-serialize="true" name="surname" id='metaSurname' />
+                <label for="title">Tytuł naukowy: </label>
+                <input type="text" data-serialize="true" name="title" id='metaTitle' placeholder='Tytuł naukowy' />
+                <label for="title">Pełne imię i nazwisko wraz z tytułem naukowym: </label>
+                <input type="text" data-serialize="true" name="full_name_with_title" id='metaTitle' />
+            </section>
+            <fieldset class="form__group form-group">
+                <!-- <label><input class="is__unknown" type="checkbox" value="unknown">Czy znasz pełną datę urodzenia?</label> -->
+                <legend>Data urodzenia</legend>
+                Dzień: <input type="number" data-serialize="false" name="day_of_birth" /> 
+                Miesiąc: <input type="number" data-serialize="false" name="month_of_birth" /> 
+                Rok: <input type="number" data-serialize="false" name="year_of_birth" />
+            </fieldset>
+            <fieldset class="form__group form-group">
+                <!-- <label><input class="is__unknown" type="checkbox" value="unknown">Czy znasz pełną datę urodzenia?</label> -->
+                <legend>Data śmierci</legend>
+                Dzień: <input type="number" data-serialize="false" name="day_of_birth" /> 
+                Miesiąc: <input type="number" data-serialize="false" name="month_of_birth" /> 
+                Rok: <input type="number" data-serialize="false" name="year_of_birth" />
+            </fieldset>
+            <!--    
+            <section class='form__group form-group'>
+                <label><input class="is__unknown" type="checkbox" value="unknown">Czy znasz pełną datę śmierci?</label>
+                <label for="date_of_death">Data śmierci:</label>
+                <input type="text" placeholder="dd.mm.rrrr" data-serialize="true" name="date_of_death" />
+            </section>
+            -->
+            <section class="form__group form-group">
+                <label for="age">Wiek: </label>
+                <input type="number" data-serialize="true" name="age" />
+            </section>
+            <section class="form__group form-group">
+                <label for="cementary_id">Cmentarz</label>
+                <select data-serialize="true" name="cementary_id">
+                    {% for cementary in cementaries %}
+                    <option value="{{cementary['id']}}">{{cementary['full_name']}} - {{cementary['full_address']}}</option>
+                    {% endfor %}
+                </select>
+            </section>
+            <section class="form__group form-group">
+                <label for="gps_lon">Szerokość GPS (Północ|Południe): </label>
+                <input data-serialize="true" name="gps_lat" class='form__input' required pattern="(-?\d{1,3}\.\d+)?" type="text" placeholder="GPS -- dł. w formacie xx.xxxxxx"
+                />
+                <label for="gps_lat">Długość GPS (Wschód|Zachód): </label>
+                <input data-serialize="true" name="gps_lon" class='form__input' required pattern="(-?\d{1,3}\.\d+)?" type="text" placeholder="GPS -- szer. w formacie xx.xxxxxx"
+                />
+            </section>
+            <section class='form__group form-group'>
+                <button data-action="save-metadata" id='sendMetadata'>Zapisz</button>
+            </section>
+        </form>
+    </section>
+    </section>
+</div>

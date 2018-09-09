@@ -1,0 +1,33 @@
+<div class="panel__container">
+        <header class="panel__header bg-dark">Edytuj grób</header>
+        <section class="panel__body">
+        <table class="table">
+            <thead>
+                <th>Nazwa</th>
+                <th>Adres</th>
+                <th>Miasto</th>
+            </thead>
+            <tbody>
+            {% for it in cementaries %} 
+                <tr>
+                    <td>{{it["full_name"]}}</td>
+                    <td>{{it["full_address"]}}</td>
+                    <td>{{it["city"]}}</td>
+                </tr>    
+            {% endfor %}
+            </tbody>
+        </table>
+
+<form method='POST' id='cementaryNewForm' class='panel__form'>
+        <section class='form__group'>
+            <label for="full_name" >Nazwa cmentarza</label>
+            <input type="text" data-serialize='true' name="full_name" />
+            <label for="full_address">Adres cmentarza</label>
+            <input type="text" data-serialize='true' name="full_address" />
+            <label for="city">Miasto</label>
+            <input type="text" data-serialize='true' name="city" />
+            <button type="button" id="cementaryPanelSaveButton">Zapisz cmentarz</button>
+        </section>
+    </form>
+    </section>
+    </div>
