@@ -1,5 +1,6 @@
 from .auth import login_required
 from flask import g, current_app, Blueprint, request, render_template, url_for, session, Response
+import re 
 
 from nekrologia.db import get_db 
 import os  
@@ -18,7 +19,6 @@ ALLOWED = ('.jpeg','.jpg', '.png', 'gif')
 def allowed_file(filename):
     return os.path.splitext(filename)[1].lower() in ALLOWED 
 
-import re 
 def correct_filename(filename):
     return re.match(r"^[A-Za-z0-9_]*\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$", filename) is not None 
 

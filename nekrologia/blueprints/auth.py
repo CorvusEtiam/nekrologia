@@ -83,6 +83,7 @@ def load_logged_user():
     else:
         g.user = get_db().execute("SELECT * FROM user WHERE id = ?", (user_id, )).fetchone()
         g.admin = (g.user['admin_permit']) == 1
+#        print("{} => {}".format(g.user, g.admin))
 
 @bp.route('/logout')
 def logout():
