@@ -35,6 +35,7 @@
     color: #111;
 }
 
+
 .login__submit {
     width: 50%;
     height: 3em;
@@ -42,7 +43,11 @@
     color: #eee;
     outline: none;
     border: none;
+    border-radius: 15px;
+}
 
+.login__button--danger {
+    background: red;
 }
 
 .container {

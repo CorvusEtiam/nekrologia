@@ -24,9 +24,14 @@ class RegisterForm(FlaskForm):
                         v.Email(message=None), 
                         v.Length(6, 255)
                     ])
-        
+    
+class RemoveAccountForm(FlaskForm):
+    username = TextField("Login", validators = [v.DataRequired()])
+    password = PasswordField("Hasło", validators = [v.DataRequired()])
 
-
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField("Stare hasło", validators=[v.DataRequired()])
+    new_password = PasswordField("Nowe hasło", validators=[v.DataRequired()])
 
 @bp.route('/register', methods = ['POST', 'GET'])
 def register():
@@ -52,6 +57,42 @@ def accept():
     if g.user is not None and g.user['activated']:
         return redirect(url_for('panel'))
     return render_template('auth/wait_for_accept.html')
+
+
+@bp.route('/remove_account', methods = ['POST', 'GET'])
+@login_required
+def remove_account():
+    form = RemoveAccountForm(request.form)
+    if request.method == "POST":
+        if form.validate_on_submit():
+            if g.user["username"] == form.username.data and check_password_hash(g.user["password_hash"], form.password.data):
+                sql = "DELETE FROM user WHERE id=?;"
+                db = get_db()
+                db.execute(sql, g.user["id"])
+                db.commit()
+                return redirect(url_for("login"))
+            else:
+                return render_template("auth/remove_account.html", error = "Zły login lub hasło")
+    return render_template("auth/remove_account.html", error = None)
+
+@bp.route("/change_password", methods = ["POST", "GET"])
+@login_required
+def change_password():
+    error = None 
+    form = ChangePasswordForm(request.form)
+    if request.method == "POST":
+        if form.validate_on_submit():
+            if check_password_hash(g.user["password_hash"], form.old_password.data):
+                sql = "UPDATE user SET password_hash=? WHERE id=?;"
+                db = get_db()
+                db.execute(sql, generate_password_hash(form.new_password.data), g.user["id"])
+                db.commit()
+                session.clear()
+                return redirect(url_for("auth.login"))
+            else:
+                error = "Złe hasło"      
+    return render_template("auth/remove_account.html", error = error)
+
 
 @bp.route('/login', methods = ['POST', 'GET'])
 def login():
@@ -95,6 +136,15 @@ def login_required(view):
     @wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
+            return redirect(url_for('auth.login'))
+        return view(**kwargs)
+    return wrapped_view
+
+
+def admin_required(view):
+    @wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None or g.user['admin_permit'] !== 1:
             return redirect(url_for('auth.login'))
         return view(**kwargs)
     return wrapped_view

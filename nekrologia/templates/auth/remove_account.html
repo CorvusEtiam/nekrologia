@@ -1,0 +1,17 @@
+{% extends "auth/base.html" %}
+{% block title %}Usuwanie konta{% endblock %}
+{% block content %} 
+<form class="login" method="POST" role="form">
+    {{ form.csrf_token }}
+    {% if error != None %}
+    <p class='login__group--error'>
+        <span class="error">
+            {{error}}
+        </span>
+    </p>    
+    {% endif %}
+    {{ form.username(class='login__input') }}
+    {{ form.password(class='login__input') }}
+    <button class='login__submit login__button--danger' type="submit">Usuń konto</button>
+</form>
+{% endblock %}

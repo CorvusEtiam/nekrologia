@@ -3,12 +3,13 @@ from .auth import login_required
 from flask import g, current_app, Blueprint, request, render_template, url_for, session, send_file, jsonify, Response
 from nekrologia.db import get_db 
 from nekrologia.cache import get_cache, get_cached_resource, update_cache
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps 
 
 bp = Blueprint('api', __name__)
 
 DEFAULT_RES_PATH = "/home/mrybicki/Project/necrologia/nekrologia/res/osoba/"
+
 
 @bp.route('/api/grave/<int:grave_id>', methods = ['GET'])
 def person_descr(grave_id):
@@ -78,6 +79,8 @@ def create(tablename):
         return jsonify(api_create_helper("cementary", fields, json_data))
     elif tablename == 'user':
         fields = ("username", "email", "password_hash", "admin_permit", "activated")
+        if "password" in json_data:
+            json_data['password_hash'] = generate_password_hash(json_data["password"])
         return jsonify(api_create_helper('users', fields, json_data))
     elif tablename == 'description':
         user_id = json_data['id']
@@ -122,10 +125,15 @@ def update(param):
     if param == 'grave':
         fields = ("name", "surname", "title", "full_name_with_title", "date_of_birth", 
             "date_of_death", "cementary_id", "gps_lon", "gps_lat")
-        result = api_update_helper('grave', request.json, fields)
+        result = api_update_helper('grave', json_data, fields)
     elif param == 'user':
         fields = ("username", "email", "password_hash", "admin_permit", "activated")
-        result = api_update_helper('user', request.json, fields)
+        if "password" in json_data:
+            json_data['password_hash'] = generate_password_hash(json_data["password"])
+        if ("admin_permit" in json_data or "activated" in json_data) and not g.admin:
+            result = { "status_msg" : "Niepoprawna operacja na koncie użytkownika"}
+        else: 
+        result = api_update_helper('user', json_data, fields)
     elif param == 'cementary':
         fields = ("full_name", "full_address", "city")
         result = api_update_helper('cementary', request.json, fields)
@@ -143,33 +151,26 @@ def update(param):
 
 @bp.route('/api/remove/<string:param>', methods = ['POST'])
 def remove(param):
-    if g.admin == None:
-        return jsonify({'status_msg' : "No access to remove endpoint"})
-    if request.json == None:
-        return jsonify({'status_msg' : "AJAX problem -- json not visible for server"})    
-    target = request.json.get('id', None)
-    
-    if target == None:
-        return jsonify({'status_msg' : "key(id) not specified"})
-    
-    def helper(target, id):
-        db = get_db()
-        db.execute('DELETE FROM {} WHERE id=?'.format(target), (id,))
-        db.commit()
-    
-    if param == 'grave':
-        helper('grave', target)
-        result = {"status_msg" : "ok"}
-    elif param == 'user':
-        helper('user', target)
-        result = {"status_msg" : "ok"}
-    elif param == 'cementary':
-        helper('cementary', target)
-        result = {"status_msg" : "ok"}
-    else:
-        print("Bad Request :: {!r}".format(data))
-        result = { 'status_msg' : 'incorrect param specified', 'param' : param }
-    return jsonify(result)
+    if param not in ("cementary", "user", "grave", "description"):
+        return jsonify(err("Unkown param: {}".format(param)))
+    if param == "user":
+        if not g.admin:
+            return jsonify(err("Tylko admin może usuwać użytkowników. Jeśli chcesz usunąć konto skorzystaj z panelu Moje Konto"))
+        else:
+            sql = "DELETE FROM user WHERE id=?;"
+            db = get_db()
+            db.execute(sql, request.json.get("id"))
+            db.commit()
+            return jsonify({"status_msg" : "OK"})
+    elif param == "grave":
+            sql = "DELETE FROM grave WHERE id=?;"
+            db = get_db()
+            db.execute(sql, request.json.get("id"))
+            db.commit()
+            return jsonify({"status_msg" : "OK"})
+
+            
+
 
 
 @bp.route('/api/image', methods = ['GET'])

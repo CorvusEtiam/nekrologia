@@ -1,4 +1,4 @@
-from .auth import login_required
+from .auth import login_required, admin_required
 from flask import g, current_app, Blueprint, request, render_template, url_for, session, Response
 import re 
 
@@ -39,3 +39,4 @@ def upload_image():
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
             return Response("Wysłano  <a href='/panel'>Powrót</a>", status = 200)
         
+    

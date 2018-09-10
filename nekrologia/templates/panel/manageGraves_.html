@@ -10,17 +10,19 @@
                     <th>Data śm.</th>
                     <th>Szer. GPS</th>
                     <th>Dł. GPS</th>
+                    <th>Usuń</th>
                 </tr>
             </thead>
             <tbody>
                 {% for grave in graves %}
-                <tr>
-                    <td>{{grave["name"]}}</td>
-                    <td>{{grave["surname"]}}</td>
+                <tr data-grave-id="{{grave['id']}}">
+                    <td id='name'>{{grave["name"]}}</td>
+                    <td id='surname'>{{grave["surname"]}}</td>
                     <td>{{grave["date_of_birth"]}}</td>
                     <td>{{grave["date_of_death"]}}</td>
                     <td>{{grave["gps_lon"]}}</td>
                     <td>{{grave["gps_lat"]}}</td>
+                    <td><button class="btn btn-danger" data-action="remove-grave" data-target="{{grave['id']}}">Usuń</button></td>
                 </tr>
                 {% endfor %}
             </tbody>
